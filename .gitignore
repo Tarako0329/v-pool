@@ -1,0 +1,13 @@
+.env
+*error_log*
+*.sql
+*.sh
+qdmail.log
+*.log
+.bk
+backup
+xxx*
+*copy.php
+.ini
+upload/*
+.MOV

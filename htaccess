@@ -1,0 +1,12 @@
+#メモリ使用量の制限
+php_value memory_limit 2.1G
+ 
+#POSTデータに許可される最大サイズ
+php_value post_max_size 2G
+ 
+#1つのファイルアップロードに許可される最大サイズ
+php_value upload_max_filesize 2G
+
+php_value max_execution_time 1000
+php_value max_input_time 1000
+

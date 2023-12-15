@@ -1,0 +1,10 @@
+ver0.01.0:my first commit
+
+
+【Issues】
+
+
+ローカルからテスト環境へ
+cd /home/ifduktdo/public_html/v-pool
+git fetch --all
+git reset --hard origin/master
