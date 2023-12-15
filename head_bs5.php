@@ -27,7 +27,7 @@
     <script src="script/indexeddb.js?<?php echo $time; ?>"></script>
 
 
-    <link rel='manifest' href='manifest.webmanifest'>
+    <!--<link rel='manifest' href='manifest.webmanifest'>-->
     <script>/*serviceWorker*/
         /*
         if('serviceWorker' in navigator){

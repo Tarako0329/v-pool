@@ -15,7 +15,7 @@ if(isset($_FILES["upload_file"])){
         if(is_uploaded_file($_FILES["upload_file"]["tmp_name"][$i])){
             file_put_contents("error_log",date('Y/m/d-H:i:s')."：uploading...\n",FILE_APPEND);
             // ファイルをお好みの場所に移動
-            move_uploaded_file($_FILES["upload_file"]["tmp_name"][$i], "./upload/eriko/" . $_FILES["upload_file"]["name"][$i]);
+            move_uploaded_file($_FILES["upload_file"]["tmp_name"][$i], "upload/demo/temp/" . $_FILES["upload_file"]["name"][$i]);
         }
     }
 

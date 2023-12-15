@@ -11,10 +11,6 @@ file_put_contents("error_log",date('Y/m/d-H:i:s')."：uploading index.php...\n",
     //共通部分、bootstrap設定、フォントCND、ファビコン等
     include "head_bs5.php" 
     ?>
-    <script
-  src="https://code.jquery.com/jquery-3.6.0.min.js"
-  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
-  crossorigin="anonymous"></script>
     <TITLE>Video Uploader</TITLE>
 </head>
 <BODY id = 'body' style='background:black;' >
@@ -143,28 +139,9 @@ file_put_contents("error_log",date('Y/m/d-H:i:s')."：uploading index.php...\n",
             console.log(...body.entries());
 
             
-            axios.post("/videos/uploader.php", body)
+            axios.post("uploader.php", body)
             .then((response) => alert('succsess'))
             .catch((error) => console.log(error));
-            /*
-            $.ajax({
-                // 通信先ファイル名
-                type        : 'POST',
-                url         : 'https://green-island.mixh.jp/videos/uploader.php',
-                data        : body,
-                mode        : 'multiple',
-                processData: false,
-                contentType: false,
-                },
-            ).done(
-                function( data ){
-                    alert('jqeru_success')
-                    document.getElementById( "ID001" ).innerHTML = ""
-                }
-            ).fail(
-                function( data ){alert('jquery_fail')}
-            )
-            */
         }
           
         function OnFileSelect( inputElement ){

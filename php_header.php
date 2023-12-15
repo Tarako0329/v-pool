@@ -9,7 +9,6 @@ $dotenv->load();
 define("MAIN_DOMAIN",$_ENV["MAIN_DOMAIN"]);
 define("ROOT_URL","http://".MAIN_DOMAIN."/");
 
-//define("MAIN_DOMAIN",$_ENV["MAIN_DOMAIN"]);
 /*
 $rtn=session_set_cookie_params(24*60*60*24*3,'/','.'.MAIN_DOMAIN,true);
 if($rtn==false){
@@ -18,6 +17,8 @@ if($rtn==false){
 }
 */
 session_start();
+
+$_SESSION["uid"] = "demo";
 
 require "functions.php";
 
@@ -40,7 +41,10 @@ $pass=dirname(__FILE__);
 
 
 // DBとの接続
-//$pdo_h = new PDO(DNS, USER_NAME, PASSWORD, get_pdo_options());
+define("DNS","mysql:host=".$_ENV["SV"].";dbname=".$_ENV["DBNAME"].";charset=utf8");
+define("USER_NAME", $_ENV["USER"]);
+define("PASSWORD", $_ENV["PASS"]);
+$pdo_h = new PDO(DNS, USER_NAME, PASSWORD, get_pdo_options());
 
 
 

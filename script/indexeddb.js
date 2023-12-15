@@ -1,5 +1,5 @@
-const dbName = 'WebRezDB';
-const dbVersion=2;
+const dbName = 'v-pool';
+const dbVersion=1;
 
 const openReq  = indexedDB.open(dbName,dbVersion);
 //　DB名を指定して接続。DBがなければ新規作成される。
@@ -7,8 +7,7 @@ const openReq  = indexedDB.open(dbName,dbVersion);
 openReq.onupgradeneeded = function(event){
 //onupgradeneededは、DBのバージョン更新(DBの新規作成も含む)時のみ実行
   let db = event.target.result;
-  db.createObjectStore('LocalParameters', {keyPath : 'id'})
-  IDD_Write('LocalParameters',[{id:'menu_color',No:'0'}])
+  //db.createObjectStore('LocalParameters', {keyPath : 'id'})
   console_log('db upgrade');
 }
 
