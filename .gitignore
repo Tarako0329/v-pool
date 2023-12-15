@@ -9,5 +9,5 @@ backup
 xxx*
 *copy.php
 .ini
-upload/*
-.MOV
+*.MOV
+*.mp4
