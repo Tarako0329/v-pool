@@ -47,9 +47,7 @@ define("PASSWORD", $_ENV["PASS"]);
 $pdo_h = new PDO(DNS, USER_NAME, PASSWORD, get_pdo_options());
 
 define("SAVEDIR", $_ENV["SAVEDIR"]);
-log_writer("upload.php",SAVEDIR);
 
-//deb_echo("端末ID：".MACHIN_ID);
 
 
 ?>

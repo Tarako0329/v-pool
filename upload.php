@@ -1,9 +1,6 @@
 <?php
 require_once "php_header.php";
 
-
-
-
 $config = new \Flow\Config();
 $config->setTempDir( SAVEDIR.$_SESSION["uid"].'/chunks_temp_folder'); //小分けファイルの一時保存先指定
 
@@ -26,16 +23,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
       return ;
   }
 }
-$savedir = SAVEDIR.$_SESSION["uid"].'/temp/'.$request->getFileName();
-//log_writer("upload.php",$savedir);
+$savedir = SAVEDIR.$_SESSION["uid"].'/temp/';
+$filenname = date('YmdHis')."-".$request->getFileName();
+log_writer("upload.php",$savedir.$filenname);
 
 //ファイルが揃ったら結合して保存
-if ($file->validateFile() && $file->save( $savedir) ) {
+if ($file->validateFile() && $file->save( $savedir.$filenname) ) {
   // ファイルが全部アップロードされた後の処理
-  $sql = "insert into filelist(uid,filename) values(:id,:filename)";
+  $sql = "insert into filelist(uid,filename,before_name) values(:id,:filename,:before_name)";
   $stmt = $pdo_h->prepare($sql);
   $stmt->bindValue("id", $_SESSION["uid"], PDO::PARAM_STR);
-  $stmt->bindValue("filename", date('YmdHis')."-".$_FILES["upload_file"]["name"][$i], PDO::PARAM_STR);
+  $stmt->bindValue("filename", $filenname, PDO::PARAM_STR);
+  $stmt->bindValue("before_name", $request->getFileName(), PDO::PARAM_STR);
   $stmt->execute();
 
 }else{
