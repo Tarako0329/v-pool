@@ -11,6 +11,7 @@ file_put_contents("error_log",date('Y/m/d-H:i:s')."：uploading index.php...\n",
     //共通部分、bootstrap設定、フォントCND、ファビコン等
     include "head_bs5.php" 
     ?>
+    <script src="./script/flow.js-master/src/flow.js"></script>
     <TITLE>Video Uploader</TITLE>
 </head>
 <BODY id = 'body' style='background:black;' >
@@ -18,19 +19,32 @@ file_put_contents("error_log",date('Y/m/d-H:i:s')."：uploading index.php...\n",
         <h1>Video Uploader</h1>
     </HEADER>
     <MAIN class='container' style='color:#fff;'>
-        <div  class='row' style='margin-bottom:5px;' >
-            <div class='col-12'>
+        <div class='row' style='margin-bottom:15px;' >
+            <div class='col-1'></div>
+            <div class='col-10'>
                 <label for='formFile' class='form-label' >アップロードする動画を選択（複数可）</label>
-                <input class='form-control' required accept='video/*' type='file' id='formFile' 
-                onchange='OnFileSelect(this);' type='file' multiple value='動画'>
-               
-                <ul id='ID001'></ul>
-                
-                
-                <button class='btn btn-primary' onclick="up_submit()">送 信</button>
+                <button class='btn btn-primary' style='width:100%' id='formFile' >動画選択</button>
+            </div>
+            <div class='col-1'></div>
+        </div>
+        <div class='row' id='filelist' style='margin-bottom:15px;'>
+        </div>
+        <div class='row' style='margin-bottom:15px;'>
+            <div class='col-1'></div>
+                <div class='col-10' style='border:solid 1px #FFA400;padding:2px;'>
+                    <div class='text-center' style='height:100%;width:0%;padding:0;margin:0;background-color:#fff;color:#FFA400;' id='progressbar'></div>
+                </div>
+                <div class='col-1'></div>
+            </div>
+        <div class='row'>
+            <div class='col-1'></div>
+            <div class='col-10'>
+                <button class='btn btn-primary' style='width:100%' onclick="uploading()">送 信</button>
+            <div class='col-1'></div>
+        </div>
             </div>
         </div>
-
+        <!--
         <div class='row' id='getlist'>
             <div><button @click="clear" class='btn btn-primary' style='width:80px;'>{{message}}</button></div>
             
@@ -45,7 +59,7 @@ file_put_contents("error_log",date('Y/m/d-H:i:s')."：uploading index.php...\n",
             </template>
             <div ref="observe_element">この要素を監視します</div>
         </div>
-
+        -->
     </MAIN>
     <FOOTER>
         
@@ -60,11 +74,8 @@ file_put_contents("error_log",date('Y/m/d-H:i:s')."：uploading index.php...\n",
                 const observe_element = ref(null)
                 
                 onMounted(() => {
- 
                     get_files('true')
-                    
                     console.log(observe_element.value)
-
                     const observer = new IntersectionObserver(entries => {
                         const entry = entries[0]
                         if (entry && entry.isIntersecting) {
@@ -72,14 +83,11 @@ file_put_contents("error_log",date('Y/m/d-H:i:s')."：uploading index.php...\n",
                             get_files('false')
                         }
                     })
-
                     observer.observe(observe_element.value)
-                   
                 });
 
                 const updated_users = Vue.computed(() => {
                   let searchWord = search.value.toString().trim();
-                
                   if (searchWord === "") return files.value;
                 
                   return files.value.filter((file) => {
@@ -125,48 +133,46 @@ file_put_contents("error_log",date('Y/m/d-H:i:s')."：uploading index.php...\n",
         }).mount('#getlist');
     </script><!--vue-->
     <script>
-        
-        function up_submit(){
-            console.log('submit go!');
-            const body = new FormData()
-            //const body = document.getElementById('f_upload')
+        var flow = new Flow({
+            target:'upload.php',
+            chunkSize:1*1028*1028*10, //チャンクサイズ（小分けにするサイズです）
+        });
+        var flowfile= flow.files;
+        var index=0
+        flow.assignBrowse(document.getElementById('formFile'));
 
-            // Read selected files
-            const totalfiles = document.getElementById('formFile').files.length;
-            for (var index = 0; index < totalfiles; index++) {
-                body.append("upload_file[]", document.getElementById('formFile').files[index]);
-            }
-            console.log(...body.entries());
+        flow.on('fileAdded', function(file, event){
+            //console.log(file, event);
+            index = index + Number(1)
+            document.getElementById('filelist').innerHTML += '<div class="col-1"></div><div class="col-8">' + file.name + '</div><div class="col-2" id="' + index + '">0%</div><div class="col-1"></div>'
+        });
 
-            
-            axios.post("uploader.php", body)
-            .then((response) => alert('succsess'))
-            .catch((error) => console.log(error));
-        }
-          
-        function OnFileSelect( inputElement ){
-            const fileList = inputElement.files;  // ファイルリストを取得
-            let fileCount = fileList.length;    // ファイルの数を取得
-        
-            // HTML文字列の生成
-            let fileListBody = "選択されたファイルの数 = " + fileCount + "<br/><br/>";
-        
-            // 選択されたファイルの数だけ処理する
-            for ( let i = 0; i < fileCount; i++ ) {
-                let file = fileList[ i ];   // ファイルを取得
-        
-                // ファイルの情報を文字列に格納
-                fileListBody += "<li>[ " + ( i + 1 ) + "ファイル目 ]";
-                fileListBody += "name             = " + file.name + "/";
-                fileListBody += "type             = " + file.type + "/";
-                fileListBody += "size             = " + file.size + "/";
-                fileListBody += "lastModifiedDate = " + file.lastModifiedDate + "/";
-                fileListBody += "lastModified     = " + file.lastModified + "/";
-                fileListBody += "</li>";
-            }
-        
-            // 結果のHTMLを流し込む
-            document.getElementById( "ID001" ).innerHTML = fileListBody;
+        flow.on('fileSuccess', function(file,message){
+            // アップロード完了したときの処理
+            console_log(`${file.name} アップロード完了`);//今回はメッセージを表示します。
+            index = index + Number(1)
+            document.getElementById(index).innerHTML = '100%'
+        });
+        flow.on('filesSubmitted', function(file) {
+            // アップロード実行
+            //flow.upload();
+        });
+        flow.on('progress',function(){
+            //プログレスバーの実行
+            //flow.progress() で進捗が取得できるのでそれを利用してプログレスバーを設定
+            document.getElementById("progressbar").innerHTML = Math.floor(flow.progress()*100) + '%'
+            document.getElementById("progressbar").style.width = Math.floor(flow.progress()*100) + '%'
+        });
+        flow.on('complete',()=>{
+            console_log("アップロードおしまい")
+            flow.off()
+            index=0
+
+        })
+        const uploading = () =>{
+            flow.upload();
+            index=0
+            console_log("アップロード実行")
         }
     </script>
 

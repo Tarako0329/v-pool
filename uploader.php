@@ -4,6 +4,9 @@ require "php_header.php";
 // ファイルがあれば処理実行
 
 //var_dump($_FILES);
+$sql = "insert into filelist(uid,filename) values(:id,:filename)";
+$stmt = $pdo_h->prepare($sql);
+
 $i=0;
 file_put_contents("error_log",date('Y/m/d-H:i:s')."：uploading start...\n",FILE_APPEND);
 if(isset($_FILES["upload_file"])){
@@ -15,7 +18,10 @@ if(isset($_FILES["upload_file"])){
         if(is_uploaded_file($_FILES["upload_file"]["tmp_name"][$i])){
             file_put_contents("error_log",date('Y/m/d-H:i:s')."：uploading...\n",FILE_APPEND);
             // ファイルをお好みの場所に移動
-            move_uploaded_file($_FILES["upload_file"]["tmp_name"][$i], "upload/demo/temp/" . $_FILES["upload_file"]["name"][$i]);
+            move_uploaded_file($_FILES["upload_file"]["tmp_name"][$i], "upload/demo/temp/" .date('YmdHis')."-". $_FILES["upload_file"]["name"][$i]);
+            $stmt->bindValue("id", $_SESSION["uid"], PDO::PARAM_STR);
+            $stmt->bindValue("filename", date('YmdHis')."-".$_FILES["upload_file"]["name"][$i], PDO::PARAM_STR);
+            $stmt->execute();
         }
     }
 

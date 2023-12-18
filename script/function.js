@@ -9,3 +9,12 @@ const console_log=(log)=>{
   }
 }
 
+const deleteAllFormData = (formData) => {
+  const keys = [];
+  for (const key of formData.keys()) {
+      keys.push(key);
+  }
+  for (const idx in keys) {
+      formData.delete(keys[idx]);
+  }
+}

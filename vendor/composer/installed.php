@@ -19,6 +19,15 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
+        'flowjs/flow-php-server' => array(
+            'pretty_version' => 'v1.2.0',
+            'version' => '1.2.0.0',
+            'reference' => 'fe8890c25e835d0b4f58d8bd91331326ab1808ba',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../flowjs/flow-php-server',
+            'aliases' => array(),
+            'dev_requirement' => false,
+        ),
         'graham-campbell/result-type' => array(
             'pretty_version' => 'v1.1.2',
             'version' => '1.1.2.0',
