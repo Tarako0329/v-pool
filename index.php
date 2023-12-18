@@ -1,6 +1,12 @@
 <?php
 require "php_header.php";
-file_put_contents("error_log",date('Y/m/d-H:i:s')."：uploading index.php...\n",FILE_APPEND);
+$sql = "insert into filelist(uid,filename,before_name) values(:id,:filename,:before_name)";
+$stmt = $pdo_h->prepare($sql);
+$stmt->bindValue("id", $_SESSION["uid"], PDO::PARAM_STR);
+$stmt->bindValue("filename", "test", PDO::PARAM_STR);
+$stmt->bindValue("before_name", "test", PDO::PARAM_STR);
+$stmt->execute();
+
 //var_dump(getFileList("./upload/ryota/"));
 ?>
 <!DOCTYPE html>
