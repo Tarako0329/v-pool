@@ -1,12 +1,13 @@
 <?php
 require "php_header.php";
+/*
 $sql = "insert into filelist(uid,filename,before_name) values(:id,:filename,:before_name)";
 $stmt = $pdo_h->prepare($sql);
 $stmt->bindValue("id", $_SESSION["uid"], PDO::PARAM_STR);
 $stmt->bindValue("filename", "test", PDO::PARAM_STR);
 $stmt->bindValue("before_name", "test", PDO::PARAM_STR);
 $stmt->execute();
-
+*/
 //var_dump(getFileList("./upload/ryota/"));
 ?>
 <!DOCTYPE html>
@@ -162,6 +163,7 @@ $stmt->execute();
         flow.on('filesSubmitted', function(file) {
             // アップロード実行
             //flow.upload();
+            console_log("アップロード準備OK")
         });
         flow.on('progress',function(){
             //プログレスバーの実行

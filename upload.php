@@ -4,6 +4,8 @@ require_once "php_header.php";
 $config = new \Flow\Config();
 $config->setTempDir( SAVEDIR.$_SESSION["uid"].'/chunks_temp_folder'); //小分けファイルの一時保存先指定
 
+//log_writer("upload.php",SAVEDIR.$_SESSION["uid"].'/chunks_temp_folder');
+
 $file = new \Flow\File($config);
 $request = new \Flow\Request();
 
@@ -11,7 +13,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     if ($file->checkChunk()) {
         header("HTTP/1.1 200 Ok");
     } else {
-        header("HTTP/1.1 204 No Content");
+      log_writer("upload.php","HTTP/1.1 204 No Content");
+      header("HTTP/1.1 204 No Content");
         return ;
     }
 } else {
@@ -19,6 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
       $file->saveChunk();
   } else {
       // error, invalid chunk upload request, retry
+      log_writer("upload.php","HTTP/1.1 400 Bad Request");
       header("HTTP/1.1 400 Bad Request");
       return ;
   }
