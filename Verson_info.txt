@@ -1,4 +1,4 @@
-ver0.01.0:my first commit
+ver0.01.1:my first commit
 
 
 【Issues】
@@ -6,5 +6,10 @@ ver0.01.0:my first commit
 
 ローカルからテスト環境へ
 cd /home/ifduktdo/public_html/v-pool
+git fetch --all
+git reset --hard origin/master
+
+ローカルからテスト環境へ
+cd /home/pcntfsrg/public_html/v-pool
 git fetch --all
 git reset --hard origin/master
