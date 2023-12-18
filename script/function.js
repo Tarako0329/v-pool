@@ -6,6 +6,8 @@ const console_log=(log)=>{
   //console.log(uri.hostname)
   if(uri.hostname==="localhost"){
     console.log(log)
+  }else{
+    console.log(log)
   }
 }
 
