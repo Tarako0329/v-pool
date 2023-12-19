@@ -31,7 +31,3 @@ define("SAVEDIR", $_ENV["SAVEDIR"]);
 
 
 ?>
-
-
-
-
