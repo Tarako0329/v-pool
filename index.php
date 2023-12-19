@@ -18,7 +18,7 @@ $stmt->execute();
     //共通部分、bootstrap設定、フォントCND、ファビコン等
     include "head_bs5.php" 
     ?>
-    <script src="./script/flow.js-master/src/flow.js"></script>
+    <script src="./script/flow.js"></script>
     <TITLE>Video Uploader</TITLE>
 </head>
 <BODY id = 'body' style='background:black;' >

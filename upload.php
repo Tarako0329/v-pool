@@ -12,20 +12,22 @@ $request = new \Flow\Request();
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
   if ($file->checkChunk()) {
     header("HTTP/1.1 200 Ok");
+    log_writer("upload.php","HTTP/1.1 200 Ok");
+    log_writer("upload.php \$file->checkChunk()",$file->checkChunk());
   } else {
-    //header("HTTP/1.1 204 No Content");
-    header("HTTP/1.1 400 Bad Request");
+    header("HTTP/1.1 204 No Content");
+    //header("HTTP/1.1 400 Bad Request");
     log_writer("upload.php","HTTP/1.1 204 No Content");
-    log_writer("upload.php \$GET",$_GET);
-    log_writer("upload.php \$POST",$_POST);
-    log_writer("upload.php \$file",$file);
-    
+    //log_writer("upload.php \$GET",$_GET);
+    //log_writer("upload.php \$POST",$_POST);
+    //log_writer("upload.php \$file",$file);
     log_writer("upload.php \$file->checkChunk()",$file->checkChunk());
     return ;
   }
 } else {
   if ($file->validateChunk()) {
     $file->saveChunk();
+    log_writer("upload.php","\$file->saveChunk()");
   } else {
     // error, invalid chunk upload request, retry
     header("HTTP/1.1 400 Bad Request");
