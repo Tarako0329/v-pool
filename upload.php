@@ -15,9 +15,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
   if ($file->checkChunk()) {
     header("HTTP/1.1 200 Ok");
   } else {
-    header("HTTP/1.1 400 No Content");
+    //header("HTTP/1.1 204 No Content");
+    header("HTTP/1.1 400 Bad Request");
     log_writer("upload.php","HTTP/1.1 204 No Content");
     log_writer("upload.php \$file",$file);
+    log_writer("upload.php \$file->checkChunk()",$file->checkChunk());
     return ;
   }
 } else {
