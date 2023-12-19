@@ -3,7 +3,8 @@
 // オリジナルログ出力(error_log)
 // =========================================================
 function log_writer($pgname,$msg){
-    file_put_contents("error_log","[".date("Y/m/d H:i:s")."] ORG_LOG from <".$pgname."> output <<".$msg.">>\n",FILE_APPEND);
+    $log = print_r($msg,true);
+    file_put_contents("error_log","[".date("Y/m/d H:i:s")."] ORG_LOG from [".$_SERVER["PHP_SELF"]." -> ".$pgname."] => ".$log."\n",FILE_APPEND);
 }
 
 
