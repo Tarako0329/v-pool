@@ -5,8 +5,6 @@ $config = new \Flow\Config();
 //$config->setTempDir( SAVEDIR.$_SESSION["uid"].'/chunks_temp_folder'); //小分けファイルの一時保存先指定
 $config->setTempDir( "./upload/".$_SESSION["uid"].'/chunks_temp_folder'); //小分けファイルの一時保存先指定
 
-log_writer("upload.php \$GET",$_GET);
-log_writer("upload.php \$POST",$_POST);
 
 $file = new \Flow\File($config);
 $request = new \Flow\Request();
@@ -18,7 +16,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     //header("HTTP/1.1 204 No Content");
     header("HTTP/1.1 400 Bad Request");
     log_writer("upload.php","HTTP/1.1 204 No Content");
+    log_writer("upload.php \$GET",$_GET);
+    log_writer("upload.php \$POST",$_POST);
     log_writer("upload.php \$file",$file);
+    log_writer("upload.php \$file",$file->getParam('flowChunkNumber'));
+    
     log_writer("upload.php \$file->checkChunk()",$file->checkChunk());
     return ;
   }
