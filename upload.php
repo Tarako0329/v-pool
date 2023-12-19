@@ -19,7 +19,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     log_writer("upload.php \$GET",$_GET);
     log_writer("upload.php \$POST",$_POST);
     log_writer("upload.php \$file",$file);
-    log_writer("upload.php \$file",$file->getParam('flowChunkNumber'));
     
     log_writer("upload.php \$file->checkChunk()",$file->checkChunk());
     return ;
