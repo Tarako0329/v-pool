@@ -1,4 +1,5 @@
 ver0.01.1:my first commit
+ver0.01.2:開発中：under development
 
 
 【Issues】

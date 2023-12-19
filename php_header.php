@@ -9,13 +9,6 @@ $dotenv->load();
 define("MAIN_DOMAIN",$_ENV["MAIN_DOMAIN"]);
 define("ROOT_URL","https://".MAIN_DOMAIN."/");
 
-/*
-$rtn=session_set_cookie_params(24*60*60*24*3,'/','.'.MAIN_DOMAIN,true);
-if($rtn==false){
-    echo "ERROR:session_set_cookie_params";
-    exit();
-}
-*/
 session_start();
 
 $_SESSION["uid"] = "demo";
@@ -23,19 +16,6 @@ $_SESSION["uid"] = "demo";
 require "functions.php";
 
 $time=date('Ymd-His');
-/*
-if(EXEC_MODE=="Test"){
-    //テスト環境はミリ秒単位
-    //$time="8";
-    $time=date('Ymd-His');
-    error_reporting( E_ALL );
-}else{
-    //本番はリリースした日を指定
-    $time="20221018-01";
-    //$time=date('Ymd');
-    error_reporting( E_ALL & ~E_NOTICE );
-}
-*/
 
 $pass=dirname(__FILE__);
 
