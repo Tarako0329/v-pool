@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 $savedir = SAVEDIR.$_SESSION["uid"].'/temp/';
 $filenname = date('YmdHis')."-".$request->getFileName();
 log_writer("upload.php",$savedir.$filenname);
-
+/*
 //ファイルが揃ったら結合して保存
 if ($file->validateFile() && $file->save( $savedir.$filenname) ) {
   // ファイルが全部アップロードされた後の処理
@@ -53,4 +53,5 @@ if ($file->validateFile() && $file->save( $savedir.$filenname) ) {
   // ファイルアップロード途中のときの処理
 
 }
+*/
 ?>
