@@ -7,7 +7,7 @@ require "./vendor/autoload.php";
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 define("MAIN_DOMAIN",$_ENV["MAIN_DOMAIN"]);
-define("ROOT_URL","http://".MAIN_DOMAIN."/");
+define("ROOT_URL","https://".MAIN_DOMAIN."/");
 
 /*
 $rtn=session_set_cookie_params(24*60*60*24*3,'/','.'.MAIN_DOMAIN,true);
