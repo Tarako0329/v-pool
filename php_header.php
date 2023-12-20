@@ -7,11 +7,11 @@ require "./vendor/autoload.php";
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
 $dotenv->load();
 define("MAIN_DOMAIN",$_ENV["MAIN_DOMAIN"]);
-define("ROOT_URL","https://".MAIN_DOMAIN."/");
+define("ROOT_URL",MAIN_DOMAIN."/");
 
 session_start();
 
-$_SESSION["uid"] = "demo";
+//$_SESSION = [];
 
 require "functions.php";
 
@@ -27,7 +27,6 @@ define("PASSWORD", $_ENV["PASS"]);
 $pdo_h = new PDO(DNS, USER_NAME, PASSWORD, get_pdo_options());
 
 define("SAVEDIR", $_ENV["SAVEDIR"]);
-
-
+define("NOM", $_ENV["SIO"]);
 
 ?>
