@@ -3,6 +3,8 @@ ver0.01.2:開発中：under development
 ver0.01.3:開発中：under development
 ver0.01.4:開発中：under development
 ver0.01.5:開発中：under development
+ver0.01.6:開発中：マニフェスト完
+
 
 【Issues】
 
