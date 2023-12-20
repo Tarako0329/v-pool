@@ -26,6 +26,8 @@ if(!empty($_POST)){
     $stmt->execute();
     //リダイレクト
     $_SESSION["uid"] = $_POST["id"];
+    mkdir("./upload/".$_SESSION["uid"], 0777);
+    mkdir("./upload/".$_SESSION["uid"]."/chunks_temp_folder", 0777);
     header("HTTP/1.1 301 Moved Permanently");
     header("Location: index.php");
     exit();

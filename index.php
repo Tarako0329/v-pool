@@ -46,7 +46,7 @@
 			</template>
 			<div ref="observe_element">この要素を監視します</div>
 		</div>
-		
+
 	</MAIN>
 	<FOOTER>
 		
@@ -64,7 +64,7 @@
 					get_files('true')
 					console.log(observe_element.value)
 					const observer = new IntersectionObserver(entries => {
-					const entry = entries[0]
+						const entry = entries[0]
 						if (entry && entry.isIntersecting) {
 							console.log('画面に入ったよ')
 							get_files('false')
@@ -88,7 +88,7 @@
 				
 				const get_files = (first) => {
 					axios
-					.get('ajax_loader.php?name=eriko&iCount=10&first=' + first)
+					.get('ajax_loader.php?name=eriko&iCount=3&first=' + first)
 					.then((response) => (files.value = [...files.value,...response.data],
 										console.log('setup succsess')
 										//,console.log(files))

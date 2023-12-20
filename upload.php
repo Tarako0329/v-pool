@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     return ;
   }
 }
-$savedir = SAVEDIR.$_SESSION["uid"].'/temp/';
+$savedir = SAVEDIR.$_SESSION["uid"].'/';
 $filenname = date('YmdHis')."-".$request->getFileName();
 log_writer("upload.php \$request",$request);
 
