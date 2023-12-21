@@ -12,15 +12,57 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
     header("HTTP/1.1 200 Ok");
   } else {
     header("HTTP/1.1 204 No Content");
-    return ;
+    exit() ;
   }
 } else {
   if ($file->validateChunk()) {
     $file->saveChunk();
   } else {
     // error, invalid chunk upload request, retry
+
+    $loadfile = (new \Flow\Request())->getFile();
+    $messages='UPLOAD_ERR_UNKNOWN';
+    switch($loadfile['error']){
+        case UPLOAD_ERR_INI_SIZE:
+            // upload_max_filesize ディレクティブの値を超えている
+            $messages = 'UPLOAD_ERR_INI_SIZE';
+            break;
+
+        case UPLOAD_ERR_FORM_SIZE:
+            // HTMLで指定されたMAX_FILE_SIZE を超えている
+            $messages = 'UPLOAD_ERR_FORM_SIZE';
+            break;
+
+        case UPLOAD_ERR_PARTIAL:
+            // 一部のみしかアップロードされた
+            $messages = 'UPLOAD_ERR_PARTIAL';
+            break;
+
+        case UPLOAD_ERR_NO_FILE:
+            // アップロードされなかった（ファイルが無い）
+            $messages = 'UPLOAD_ERR_NO_FILE';
+            break;
+
+        case UPLOAD_ERR_NO_TMP_DIR:
+            // テンポラリフォルダがない
+            $messages= 'UPLOAD_ERR_NO_TMP_DIR';
+            break;
+        case UPLOAD_ERR_CANT_WRITE:
+            // 書き込みに失敗
+            $messages= 'UPLOAD_ERR_CANT_WRITE';
+            break;
+
+        case UPLOAD_ERR_EXTENSION:
+            // 拡張モジュールがファイルのアップロードを中止した
+            $messages= 'UPLOAD_ERR_EXTENSION';
+            break;
+    }
+
+
+
     header("HTTP/1.1 400 Bad Request");
-    return ;
+    echo $messages;
+    exit() ;
   }
 }
 $savedir = SAVEDIR.$_SESSION["uid"].'/';

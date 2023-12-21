@@ -18,19 +18,27 @@ if(!empty($_POST)){
       $_SESSION["MSG"]="ログインIDまたはパスワードが違います";
     }
   }else if($_POST["login"]==="newlogin"){
-    $sql = "insert into user(uid,pass,name) values(:id,:pass,:name)";
-    $stmt = $pdo_h->prepare($sql);
-    $stmt->bindValue("id", $_POST["id"], PDO::PARAM_STR);
-    $stmt->bindValue("pass", $pass, PDO::PARAM_STR);
-    $stmt->bindValue("name", $_POST["nickname"], PDO::PARAM_STR);
-    $stmt->execute();
-    //リダイレクト
-    $_SESSION["uid"] = $_POST["id"];
-    mkdir("./upload/".$_SESSION["uid"], 0777);
-    mkdir("./upload/".$_SESSION["uid"]."/chunks_temp_folder", 0777);
-    header("HTTP/1.1 301 Moved Permanently");
-    header("Location: index.php");
-    exit();
+    try{
+      $pdo_h->beginTransaction();
+      $sql = "insert into user(uid,pass,name) values(:id,:pass,:name)";
+      $stmt = $pdo_h->prepare($sql);
+      $stmt->bindValue("id", $_POST["id"], PDO::PARAM_STR);
+      $stmt->bindValue("pass", $pass, PDO::PARAM_STR);
+      $stmt->bindValue("name", $_POST["nickname"], PDO::PARAM_STR);
+      $stmt->execute();
+      $pdo_h->commit();
+
+      $_SESSION["uid"] = $_POST["id"];
+      mkdir("./upload/".$_SESSION["uid"], 0777);
+      mkdir("./upload/".$_SESSION["uid"]."/chunks_temp_folder", 0777);
+
+      //リダイレクト
+      header("HTTP/1.1 301 Moved Permanently");
+      header("Location: index.php");
+      exit();
+    }catch(Exception $e){
+      $pdo_h->rollBack();
+    }
 
   }else{
 

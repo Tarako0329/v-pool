@@ -1,13 +1,12 @@
 // キャッシュするリソース(css、jsがあれば個別で追加)
 //キャッシュ利用部分を止める
-const CACHE_VERSION = 'v39_';
+const CACHE_VERSION = 'v1_';
 const CACHE_NAME = `${CACHE_VERSION}!${registration.scope}`;
 
 // キャッシュするファイルをセットする
 const urlsToCache = [
   '/css'
   ,'/img'
-  ,'/favicon.ico'
   ,'/script'
 ];
 
