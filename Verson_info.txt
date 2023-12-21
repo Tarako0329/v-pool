@@ -5,6 +5,7 @@ ver0.01.4:開発中：under development
 ver0.01.5:開発中：under development
 ver0.01.6:開発中：マニフェスト完
 ver0.01.7:開発中：bugfix
+ver0.01.8:開発中：アップロード制御の整理
 
 
 【Issues】
