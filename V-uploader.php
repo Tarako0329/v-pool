@@ -1,6 +1,7 @@
 <?php
     require "php_header.php";
 	if(empty($_SESSION["uid"])){
+        $_SESSION["MSG"]="セッション切れです。再度ログインしてください。";
         header("HTTP/1.1 301 Moved Permanently");
         header("Location: login.php");
         exit();
@@ -20,7 +21,8 @@
 </head>
 <BODY id = 'body' style='background:black;' >
     <HEADER class='text-center' style='color:#FFA400'>
-        <h1>Video Uploader</h1>
+        <h1><a href='/'>Video Uploader</a></h1>
+        <div class='youkoso'><?php echo "ようこそ".$_SESSION["name"]."さん";?></div>
     </HEADER>
     <form action='update.php' method="post" id='getlist'>
     <MAIN class='container' style='color:#fff;' >
@@ -34,7 +36,7 @@
             </div>
             <div class='col-1'></div>
         </div><!--動画選択-->
-        <div class='row' id='filelist' style='margin-bottom:15px;'>
+        <div class='row fadein' id='filelist' style='margin-bottom:15px;'>
             <!--ここにファイルリスト表示-->
         </div>
         <div class='row' style='margin-bottom:15px;'><!--progressbar-->
@@ -48,14 +50,22 @@
             <div class='col-1'></div>
             <div class='col-10'>
                 <button type='button' class='btn btn-primary btn-lg' style='width:100%' @click="uploading()">送 信</button>
-                <!--<button type='button' class='btn btn-primary btn-lg' style='width:100%' @click="uploading()">再開</button>
-                <button type='button' class='btn btn-primary btn-lg' style='width:100%' @click="cancel()">キャンセル</button>-->
             </div>
             <div class='col-1'></div>
         </div><!--送信ボタン-->
+        <div v-if='sending' class='row fadein'><!--再開・キャンセルボタン-->
+            <div class='col-1'></div>
+            <div class='col-10'>
+                <button type='button' class='btn btn-success btn-lg' style='width:50%' @click="resume()">再開</button>
+                <button type='button' class='btn btn-warning btn-lg' style='width:50%' @click="cancel()">キャンセル</button>
+                <button type='button' class='btn btn-success btn-lg' style='width:50%' @click="pause()">ストップ</button>
+            </div>
+            <div class='col-1'></div>
+        </div><!--再開・キャンセルボタン-->
         <hr>
         <div id='mibunrui'>
             <div class='row text-center'><h3>未分類動画一覧</h3></div>
+            <div class='row'>
             <template v-for='(file,index) in files' :key='file.fileNo'>
                 <div class ='col-4 col-lg-2' style='margin-bottom:20px;'>
 			        <video style='max-width:100%;width:100%;'preload='metadata' controls muted :src='`./upload/${file.uid}/${file.filename}#t=0.01`'></video>
@@ -65,7 +75,8 @@
                         <input class="form-check-input" type="checkbox" role="switch" :id="index" :name='`list[${index}][upd]`'>
                         <label class="form-check-label" :for="index">一括更新対象</label>
                     </div>
-                    <p style='color:#fff;margin-bottom: 8px;'>ファイル名：{{file.before_name}}</p>
+                    <p style='color:#fff;margin-bottom: 4px;'>ファイル名：{{file.before_name}}</p>
+                    <p style='color:#fff;margin-bottom: 4px;'>保存日時：{{file.insdate}}</p>
                     <label class="form-check-label" :for='`list[${index}][titel]`' style='color:#fff;'>タイトル：</label>
                     <input type='text' class="form-control" :value=file.titel :name='`list[${index}][titel]`' :id='`list[${index}][titel]`'>
                     <label class="form-check-label" :for='`list[${index}][name]`' style='color:#fff;'>分類：</label>
@@ -95,6 +106,7 @@
             setup() {
                 const files = ref()
                 const stats = ref('')
+                const sending = ref(false)
                 var errfilelist 
                 const error = {
                     'UPLOAD_ERR_INI_SIZE' : 'upload_max_filesize ディレクティブの値を超えている',
@@ -127,6 +139,9 @@
 
                 const selectfiles =(e)=>{//動画選択
                     console_log('selectfiles')
+                    if(flow.isUploading()){
+                        alert("ファイル送信中です。");
+                    }
                     let elem = document.getElementById(e.target.id)
                     flow.assignBrowse(elem,null,null,{'accept':'video/*'})
                     document.getElementById("progressbar").innerHTML = '0%'
@@ -135,20 +150,39 @@
                     document.getElementById("progressbar").style.color="#FFA400"
                 }
                 const uploading = () =>{//アップロード実行
-                    console_log(flowfile.file)
-                    if(file.length===0){
+                    console_log(flow.files.length)
+                    if(flowfile.length===0){
                         alert("ファイルが指定されてません。");
+                    }else if(flow.isUploading()){
+                        alert("ファイル送信中です。");
                     }else{
                         errfilelist = ""
                         console_log("アップロード実行")
                         index=0
                         flow.upload();
+                        sending.value = true
+                        //IDD_Write_ForClassOBJ('LocalParameters',{'id':flow})
                     }
                 }
                 const resume = () =>{//アップロード再開
                     console_log("アップロード再開")
-                    index=0
-                    flow.resume();
+                    if(flow.isUploading()){
+                        alert("ファイル送信中です。");
+                    }else{
+                        alert("おっと、寝てたわ。");
+                        flow.resume();
+                    }
+                }
+                const cancel = () =>{
+                    console_log("アップロードキャンセル")
+                    alert("アップロードキャンセル");
+                    flow.cancel();
+                    document.getElementById("progressbar").innerHTML = '0%'
+                    document.getElementById("progressbar").style.width = '0%'
+                }
+                const pause = () =>{
+                    alert("おやすみ。");
+                    flow.pause()
                 }
                 const get_files = () => {//アップロード後の分類等未設定の動画一覧を取得
                     axios
@@ -156,23 +190,19 @@
                     .then((response) => {
                         files.value = [...response.data],
                         console_log('get_files succsess')
-                        console_log(files.value)
+                        //console_log(files.value)
                     })
                     .catch((error) => console.log(error));
                 }
                 
                 flow.on('fileAdded', function(file, event){
                     index = index + Number(1)
-                    
                     document.getElementById('filelist').innerHTML += '<div class="col-1"></div><div class="col-8">' + file.name + '</div><div class="col-2" id="' + index + '">0%</div><div class="col-1"></div>'
-                    console_log(file);
                 });
                 flow.on('filesSubmitted', function(file) {
-                    // アップロード実行
                     if(file.length===0){
                         alert("ファイルが指定されてません。");
                     }else{
-                        errfilelist = ""
                         console_log("アップロード準備OK")
                     }
                     
@@ -198,22 +228,30 @@
                     index = index + Number(1)
                     document.getElementById(index).innerHTML = '100%'
                     flow.removeFile(file)
-                    console_log(`${file.name} リムーブ確認`);
+                    
                 });
+                flow.on('fileRemoved',(file)=>{
+                    console_log(`${file.name} リムーブ確認`);
+                    //console_log(file);
+                })
+
+
+
                 flow.on('fileError', (file, message)=>{
                     // アップロード失敗したときの処理
                     console_log(`${file.name} アップロード失敗`);//今回はメッセージを表示します。
                     index = index + Number(1)
-                    errfilelist = `<div class="col-1"></div><div class="col-8">${file.name}</div><div class="col-2" id="' + index + '">失敗:${errorString(message)}</div><div class="col-1"></div>`
+                    errfilelist += `<div class="col-1"></div><div class="col-8">${file.name}</div><div class="col-2" id="' + index + '">失敗:${errorString(message)}</div><div class="col-1"></div>`
                     document.getElementById(index).innerHTML = `失敗:${errorString(message)}`
                 });
                 flow.on('complete',(file)=>{
                     console_log("アップロードおしまい")
                     flow.cancel()
                     index=0
-                    document.getElementById('filelist').innerHTML = ''
+                    document.getElementById('filelist').innerHTML = errfilelist
                     get_files()
                     stats.value=""
+                    sending.value = false
                 })
 
                 onMounted(() => {
@@ -227,6 +265,10 @@
                     selectfiles,
                     get_files,
                     stats,
+                    sending,
+                    cancel,
+                    resume,
+                    pause,
                 };
             }
         }).mount('#getlist');

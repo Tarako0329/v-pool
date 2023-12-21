@@ -1,5 +1,5 @@
 <?php
-date_default_timezone_set('Asia/Tokyo');
+date_default_timezone_set('Asia/Tokyo'); 
 //ini_set('max_execution_time', -1);
 //ini_set('max_input_time', -1);
 require "./vendor/autoload.php";

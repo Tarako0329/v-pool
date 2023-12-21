@@ -11,6 +11,7 @@ if(!empty($_POST)){
     $user = $stmt->fetchAll();
     if(!empty($user[0]["uid"])){
       $_SESSION["uid"] = $user[0]["uid"];
+      $_SESSION["name"] = $user[0]["name"];
       header("HTTP/1.1 301 Moved Permanently");
       header("Location: index.php");
       exit();
@@ -29,6 +30,7 @@ if(!empty($_POST)){
       $pdo_h->commit();
 
       $_SESSION["uid"] = $_POST["id"];
+      $_SESSION["name"] = $_POST["nickname"];
       mkdir("./upload/".$_SESSION["uid"], 0777);
       mkdir("./upload/".$_SESSION["uid"]."/chunks_temp_folder", 0777);
 
@@ -37,6 +39,7 @@ if(!empty($_POST)){
       header("Location: index.php");
       exit();
     }catch(Exception $e){
+      $_SESSION["MSG"]="登録に失敗しました。ユーザーIDがすでに登録されてます。";
       $pdo_h->rollBack();
     }
 

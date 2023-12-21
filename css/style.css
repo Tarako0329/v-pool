@@ -29,10 +29,22 @@ button{
   margin-bottom: 5px;
 }
 .container,.container-fluid {
-  /*animation: fadein 0.7s ease-out forwards;*/
+  animation: fadein 0.7s ease-out forwards;
+}
+.fadein{
+  animation: fadein 0.7s ease-out forwards;
 }
 
 @keyframes fadein {
   0% {opacity: 0}
   100% {opacity: 1}
+}
+a {
+  text-decoration: none;
+  color:inherit;
+}
+.youkoso{
+  position:fixed;
+  top:0;
+  left:0;
 }
