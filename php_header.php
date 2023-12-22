@@ -15,7 +15,16 @@ session_start();
 
 require "functions.php";
 
-$time=date('Ymd-His');
+if(MAIN_DOMAIN==="localhost:81"){
+  $time=date('Ymd-His');
+  $id="demo";
+  $pass="00000000";
+}else{
+  $time=date('Ymd');
+  $id="";
+  $pass="";
+}
+
 
 $pass=dirname(__FILE__);
 
@@ -29,10 +38,10 @@ $pdo_h = new PDO(DNS, USER_NAME, PASSWORD, get_pdo_options());
 define("SAVEDIR", $_ENV["SAVEDIR"]);
 define("NOM", $_ENV["SIO"]);
 
-
+$token = !empty($_COOKIE["vpool"])?$_COOKIE["vpool"]:"";
 if(!empty($_SESSION["uid"])){
   //ログイン継続・期間延長
-  $token = $_COOKIE["vpool"];
+  
   setCookie("vpool", $token, time()+60*60*24*7, "/", "", TRUE, TRUE);//1week
   try{
     $pdo_h->beginTransaction();
@@ -51,7 +60,7 @@ if(!empty($_SESSION["uid"])){
   //トークンからuidを取得
   $sql = "select * from loginkeeper where token =:token and keepdatetime >=:kdatetime";
   $stmt = $pdo_h->prepare($sql);
-  $stmt->bindValue("token", $_COOKIE["vpool"], PDO::PARAM_STR);
+  $stmt->bindValue("token", $token, PDO::PARAM_STR);
   $stmt->bindValue("kdatetime", date("Y-m-d"), PDO::PARAM_STR);
   $stmt->execute();
   $user = $stmt->fetchAll();

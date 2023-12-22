@@ -67,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
 }
 $savedir = SAVEDIR.$_SESSION["uid"].'/';
 $filenname = date('YmdHis')."-".$request->getFileName();
-log_writer("upload.php \$request",$request);
+//log_writer("upload.php \$request",$request);
 
 //ファイルが揃ったら結合して保存
 if ($file->validateFile() && $file->save( $savedir.$filenname) ) {

@@ -23,9 +23,9 @@
 
         <form action='login_sql.php' method="POST">
           <label for='id' class='form-label'>ログインID</label>
-          <input type='text' class='form-control' name='id' id='id'>
+          <input type='text' class='form-control' name='id' id='id' value='<?php echo $id;?>'>
           <label for='pass' class='form-label'>パスワード</label>
-          <input type='password' class='form-control' name='pass' id='pass'>
+          <input type='password' class='form-control' name='pass' id='pass' value='<?php echo $pass;?>'>
           <label for='nickname' class='form-label'>ニックネーム</label>
           <input type='text' class='form-control' name='nickname' id='nickname'>
           <div class='row' style='margin-top:10px;'>

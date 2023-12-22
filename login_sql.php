@@ -1,6 +1,8 @@
 <?php
 require "php_header.php";
-session_regenerate_id();
+if(MAIN_DOMAIN!=="localhost:81"){
+  session_regenerate_id();
+}
 $success=false;
 
 if(!empty($_POST)){
@@ -65,7 +67,7 @@ if($success){
     exit();
   }catch(Exception $e){
     $_SESSION["MSG"]="loginkeeper登録失敗。";
-    log_writer("login_sql.php",$e);
+    log_writer("loginkeeper登録失敗。",$e);
     $pdo_h->rollBack();
   }
 }
