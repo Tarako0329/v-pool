@@ -36,15 +36,17 @@
             </div>
             <div class='col-1'></div>
         </div><!--動画選択-->
-        <div class='row fadein' id='filelist' style='margin-bottom:15px;'>
+        <div class='row fadein' id='filelist' style='border:solid 1px #FFA400;margin-bottom:15px;'>
             <!--ここにファイルリスト表示-->
         </div>
         <div class='row' style='margin-bottom:15px;'><!--progressbar-->
-            <div class='col-2 text-end'>{{stats}}</div>
-            <div class='col-8' style='border:solid 1px #FFA400;padding:2px;'>
-                <div class='text-center' style='height:100%;width:0%;padding:0;margin:0;background-color:#fff;color:#FFA400;' id='progressbar'>0%</div>
+            <div class='col-3 text-end'>{{result}}</div>
+            <div class='col-8' style='padding:2px 12px 2px 2px;'>
+                <div style='border:solid 1px #FFA400;height:100%;width:100%;'>
+                    <div class='text-center' style='height:100%;width:0%;padding:0;margin:0;background-color:#fff;color:#FFA400;' id='progressbar'>0%</div>
+                </div>
             </div>
-            <div class='col-2'></div>
+            <div class='col-1'></div>
         </div><!--progressbar-->
         <div class='row'><!--送信ボタン-->
             <div class='col-1'></div>
@@ -53,12 +55,20 @@
             </div>
             <div class='col-1'></div>
         </div><!--送信ボタン-->
-        <div v-if='sending' class='row fadein'><!--再開・キャンセルボタン-->
+        <div v-if='["sending","stop"].includes(stats)' class='row fadein'><!--再開・キャンセルボタン-->
             <div class='col-1'></div>
             <div class='col-10'>
                 <button type='button' class='btn btn-success btn-lg' style='width:50%' @click="resume()">再開</button>
                 <button type='button' class='btn btn-warning btn-lg' style='width:50%' @click="cancel()">キャンセル</button>
                 <button type='button' class='btn btn-success btn-lg' style='width:50%' @click="pause()">ストップ</button>
+                <button type='button' class='btn btn-success btn-lg' style='width:50%' @click="retry()">リトライ</button>
+            </div>
+            <div class='col-1'></div>
+        </div><!--再開・キャンセルボタン-->
+        <div v-if='["error"].includes(stats)' class='row fadein'><!--再開・キャンセルボタン-->
+            <div class='col-1'></div>
+            <div class='col-10'>
+                <button type='button' class='btn btn-success btn-lg' style='width:50%' @click="retry()">リトライ</button>
             </div>
             <div class='col-1'></div>
         </div><!--再開・キャンセルボタン-->
@@ -101,13 +111,15 @@
     </FOOTER>
     </form>
     <script>//vue.js
-        const { createApp, ref, onMounted, reactive } = Vue;
+        const { createApp, ref, onMounted, reactive,computed } = Vue;
         createApp({
             setup() {
                 const files = ref()
-                const stats = ref('')
-                const sending = ref(false)
-                var errfilelist 
+                const stats = ref('none')//none:初期値,sending,stop,success,error
+                //const result = ref(true)//送信結果
+                //const sending = ref(false)
+                var errfilelist =""
+
                 const error = {
                     'UPLOAD_ERR_INI_SIZE' : 'upload_max_filesize ディレクティブの値を超えている',
                     'UPLOAD_ERR_FORM_SIZE' : '指定されたMAX_FILE_SIZEを超えている',
@@ -137,6 +149,16 @@
                 var flowfile= flow.files;
                 var index=0
 
+                const result = computed(()=>{
+                    switch(stats.value){
+                        case 'none':return ''
+                        case 'sending':return '送信中'
+                        case 'stop':return '停止'
+                        case 'success':return '完了'
+                        case 'error':return 'エラーあり'
+                    }
+                })
+
                 const selectfiles =(e)=>{//動画選択
                     console_log('selectfiles')
                     if(flow.isUploading()){
@@ -160,7 +182,7 @@
                         console_log("アップロード実行")
                         index=0
                         flow.upload();
-                        sending.value = true
+                        //stats.value = 'sending'
                         //IDD_Write_ForClassOBJ('LocalParameters',{'id':flow})
                     }
                 }
@@ -211,9 +233,9 @@
                     //プログレスバーの実行
                     //flow.progress() で進捗が取得できるのでそれを利用してプログレスバーを設定
                     if(flow.isUploading()){
-                        stats.value = '送信中'                        
+                        stats.value = 'sending'                        
                     }else{
-                        stats.value = '停止'
+                        stats.value = 'stop'
                     }
                     document.getElementById("progressbar").innerHTML = Math.floor(flow.progress()*100) + '%'
                     document.getElementById("progressbar").style.width = Math.floor(flow.progress()*100) + '%'
@@ -228,15 +250,11 @@
                     index = index + Number(1)
                     document.getElementById(index).innerHTML = '100%'
                     flow.removeFile(file)
-                    
                 });
                 flow.on('fileRemoved',(file)=>{
                     console_log(`${file.name} リムーブ確認`);
                     //console_log(file);
                 })
-
-
-
                 flow.on('fileError', (file, message)=>{
                     // アップロード失敗したときの処理
                     console_log(`${file.name} アップロード失敗`);//今回はメッセージを表示します。
@@ -246,12 +264,18 @@
                 });
                 flow.on('complete',(file)=>{
                     console_log("アップロードおしまい")
-                    flow.cancel()
+                    if(errfilelist===""){
+                        flow.cancel()
+                        stats.value = 'success'
+                    }else{
+                        stats.value = 'error'
+                    }
+                    
                     index=0
                     document.getElementById('filelist').innerHTML = errfilelist
                     get_files()
-                    stats.value=""
-                    sending.value = false
+                    //stats.value=""
+                    
                 })
 
                 onMounted(() => {
@@ -265,10 +289,11 @@
                     selectfiles,
                     get_files,
                     stats,
-                    sending,
+                    //sending,
                     cancel,
                     resume,
                     pause,
+                    result,
                 };
             }
         }).mount('#getlist');

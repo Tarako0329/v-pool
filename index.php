@@ -22,7 +22,8 @@
 <BODY id = 'body' style='background:black;' >
 	<HEADER class='text-center' style='color:#FFA400;height:130px;'>
 		<h1>Video Uploader</h1>
-		<div class='youkoso'><?php echo "ようこそ".$_SESSION["name"]."さん";?></div>
+		<div class='youkoso'><?php echo "user:".$_SESSION["name"];?></div>
+		<div class='logoff'><a href="logoff.php">logoff</a></div>
 		<div class='row'><!--送信ボタン-->
 			<div class='col-1'></div>
 			<div class='col-10'>
