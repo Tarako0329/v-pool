@@ -18,9 +18,6 @@
     ?>
     <TITLE>Video Uploader</TITLE>
     <style>
-        html,body,main{
-            height:100%;
-        }
     </style>
 </head>
 <BODY id = 'body' style='background:black;' >
