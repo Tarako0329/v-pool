@@ -26,7 +26,7 @@ if(MAIN_DOMAIN==="localhost:81"){
 }
 
 
-$pass=dirname(__FILE__);
+//$pass=dirname(__FILE__);
 
 
 // DBとの接続

@@ -20,12 +20,12 @@
     <!--ajaxライブラリ-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>
     <script>axios.defaults.baseURL = <?php echo "'".ROOT_URL."'" ?>;</script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.js"></script><!--QRコードライブラリ-->
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/decimal.js/9.0.0/decimal.min.js"></script><!--小数演算ライブラリ-->
+	<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.js"></script>QRコードライブラリ-->
+	<!--<script src="https://cdnjs.cloudflare.com/ajax/libs/decimal.js/9.0.0/decimal.min.js"></script>小数演算ライブラリ-->
     <!--<script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>deepCopy-->
 
     <script src="script/function.js?<?php echo $time; ?>"></script>
-    <script src="script/indexeddb.js?<?php echo $time; ?>"></script>
+    <!--<script src="script/indexeddb.js?<?php //echo $time; ?>"></script>-->
 
 
     <link rel='manifest' href='manifest.webmanifest?<?php echo $time; ?>'>

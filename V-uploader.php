@@ -36,9 +36,9 @@
             </div>
             <div class='col-1'></div>
         </div><!--動画選択-->
-        <div class='row fadein' id='filelist' style='border:solid 1px #FFA400;margin-bottom:15px;'>
+        <div class='row fadein' id='filelist' style='border:solid 1px #FFA400;margin-bottom:15px;'><!--ここにファイルリスト表示-->
             <!--ここにファイルリスト表示-->
-        </div>
+        </div><!--ここにファイルリスト表示-->
         <div class='row' style='margin-bottom:15px;'><!--progressbar-->
             <div class='col-3 text-end'>{{result}}</div>
             <div class='col-8' style='padding:2px 12px 2px 2px;'>
@@ -61,19 +61,18 @@
                 <button type='button' class='btn btn-success btn-lg' style='width:50%' @click="resume()">再開</button>
                 <button type='button' class='btn btn-warning btn-lg' style='width:50%' @click="cancel()">キャンセル</button>
                 <button type='button' class='btn btn-success btn-lg' style='width:50%' @click="pause()">ストップ</button>
-                <button type='button' class='btn btn-success btn-lg' style='width:50%' @click="retry()">リトライ</button>
             </div>
             <div class='col-1'></div>
         </div><!--再開・キャンセルボタン-->
-        <div v-if='["error"].includes(stats)' class='row fadein'><!--再開・キャンセルボタン-->
+        <div v-if='["error"].includes(stats)' class='row fadein'><!--リトライ-->
             <div class='col-1'></div>
             <div class='col-10'>
                 <button type='button' class='btn btn-success btn-lg' style='width:50%' @click="retry()">リトライ</button>
             </div>
             <div class='col-1'></div>
-        </div><!--再開・キャンセルボタン-->
+        </div><!--リトライ-->
         <hr>
-        <div id='mibunrui'>
+        <div id='mibunrui'><!--動画一覧-->
             <div class='row text-center'><h3>未分類動画一覧</h3></div>
             <div class='row'>
             <template v-for='(file,index) in files' :key='file.fileNo'>
@@ -98,7 +97,7 @@
                 </div>
             </template>
             </div>
-        </div>
+        </div><!--動画一覧-->
     </MAIN>
     <FOOTER>
         <div class='row'>
@@ -116,8 +115,6 @@
             setup() {
                 const files = ref()
                 const stats = ref('none')//none:初期値,sending,stop,success,error
-                //const result = ref(true)//送信結果
-                //const sending = ref(false)
                 var errfilelist =""
 
                 const error = {
@@ -148,6 +145,8 @@
                 });
                 var flowfile= flow.files;
                 var index=0
+                var retry_index=[]
+                var rindex=0
 
                 const result = computed(()=>{
                     switch(stats.value){
@@ -206,6 +205,11 @@
                     alert("おやすみ。");
                     flow.pause()
                 }
+                const retry = () =>{
+                    //alert("おやすみ。");
+                    rindex=0
+                    flow.retry()
+                }
                 const get_files = () => {//アップロード後の分類等未設定の動画一覧を取得
                     axios
                     .get('ajax_getnoinfofiles.php')
@@ -259,8 +263,10 @@
                     // アップロード失敗したときの処理
                     console_log(`${file.name} アップロード失敗`);//今回はメッセージを表示します。
                     index = index + Number(1)
+                    rindex = rindex + Number(1)
                     errfilelist += `<div class="col-1"></div><div class="col-8">${file.name}</div><div class="col-2" id="' + index + '">失敗:${errorString(message)}</div><div class="col-1"></div>`
                     document.getElementById(index).innerHTML = `失敗:${errorString(message)}`
+                    retry_index[rindex]=index
                 });
                 flow.on('complete',(file)=>{
                     console_log("アップロードおしまい")
@@ -277,6 +283,11 @@
                     //stats.value=""
                     
                 })
+                flow.on('fileRetry',(file)=>{
+                    rindex = rindex + Number(1)
+                    document.getElementById(retry_index[rindex]).innerHTML = `retry`
+                    console_log(`リトライしてます${file.name}`)
+                })
 
                 onMounted(() => {
                     get_files()
@@ -289,7 +300,7 @@
                     selectfiles,
                     get_files,
                     stats,
-                    //sending,
+                    retry,
                     cancel,
                     resume,
                     pause,
