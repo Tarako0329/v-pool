@@ -58,7 +58,7 @@ function csrf_create(){
 
 	//自動ログインのトークンを１週間の有効期限でCookieにセット
     //setCookie("webrez_token", $token, time()+60*60*24*7, "/", null, TRUE, TRUE); // secure, httponly
-    setCookie("csrf_token", $token, time()+60*60*24*2, "/", "", TRUE, TRUE);
+    setCookie("csrf_token", $token, time()+60*60*24*2, "/", "", false, TRUE);
     
     return $token;
 }
