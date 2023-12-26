@@ -26,18 +26,27 @@ if(!empty($_POST)){
   }else if($_POST["login"]==="newlogin"){
     try{
       $pdo_h->beginTransaction();
+
       $sql = "insert into user(uid,pass,name) values(:id,:pass,:name)";
       $stmt = $pdo_h->prepare($sql);
       $stmt->bindValue("id", $_POST["id"], PDO::PARAM_STR);
       $stmt->bindValue("pass", $pass, PDO::PARAM_STR);
       $stmt->bindValue("name", $_POST["nickname"], PDO::PARAM_STR);
       $stmt->execute();
-      $pdo_h->commit();
+
+      $sql = "insert into levels(uid,level,name) values(:id,:level,:name)";
+      $stmt = $pdo_h->prepare($sql);
+      $stmt->bindValue("id", $_POST["id"], PDO::PARAM_STR);
+      $stmt->bindValue("level", "0000000000", PDO::PARAM_STR);
+      $stmt->bindValue("name", "フォルダ未選択", PDO::PARAM_STR);
+      $stmt->execute();
 
       $_SESSION["uid"] = $_POST["id"];
       $_SESSION["name"] = $_POST["nickname"];
       mkdir("./upload/".$_SESSION["uid"], 0777);
       mkdir("./upload/".$_SESSION["uid"]."/chunks_temp_folder", 0777);
+
+      $pdo_h->commit();
 
       $success=true;
 

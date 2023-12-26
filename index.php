@@ -63,13 +63,11 @@
 				const observe_element = ref(null)
 				
 				onMounted(() => {
-					get_files('true')
 					console.log(observe_element.value)
 					const observer = new IntersectionObserver(entries => {
 						const entry = entries[0]
 						if (entry && entry.isIntersecting) {
 							console.log('画面に入ったよ')
-							get_files('false')
 						}
 					})
 					observer.observe(observe_element.value)
@@ -87,36 +85,13 @@
 					);
 				  });
 				});
-				
-				const get_files = (first) => {
-					axios
-					.get('ajax_loader.php?name=eriko&iCount=3&first=' + first)
-					.then((response) => (files.value = [...files.value,...response.data],
-										console.log('setup succsess')
-										//,console.log(files))
-										))
-					.catch((error) => console.log(error));
-				}
-				
-				const clear = () => {
-					files.value = ([])
-					axios
-						.get('ajax_loader.php?name=eriko')
-						.then((response) => (
-							files.value = response.data
-							//,console.log(files)
-							))
-						.catch((error) => console.log(error));
-				}
-				
+
 				return {
 					message,
 					files,
 					search,
 					updated_users,
-					clear,
 					observe_element,
-					get_files,
 				};
 			}
 		}).mount('#getlist');

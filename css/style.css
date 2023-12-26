@@ -33,18 +33,25 @@ button{
   margin-bottom: 5px;
 }
 .container,.container-fluid {
-  animation: fadein 0.7s ease-out forwards;
+  /*animation: fadein 0.7s ease-out forwards;*/
 }
 .fadein{
   animation: fadein 0.7s ease-out forwards;
 }
+.fadeout{
+  animation: fadeout 2.7s ease-out forwards;
+}
 
 @keyframes fadein {
-  0% {opacity: 0}
-  100% {opacity: 1}
+  from {opacity: 0}
+  to {opacity: 1}
 }
-a {
-  text-decoration: none;
+@keyframes fadeout {
+  from {opacity: 1}
+  to {opacity: 0}
+}
+.a_none{
+  /*text-decoration: none;*/
   color:inherit;
 }
 .youkoso{
@@ -56,4 +63,68 @@ a {
   position:fixed;
   top:0;
   right:0;
+}
+
+.v-enter-active,
+.v-leave-active {
+  transition: opacity 0.5s ease;
+}
+
+.v-enter-from,
+.v-leave-to {
+  opacity: 0;
+}
+.ib{/*アイコンボタン*/
+  width:45px;
+  height: 35px;
+  padding:2px;
+  margin:5px;
+  margin-bottom: 5px;
+  color:#FFA400;
+  border:none;
+}
+#foldertree{
+  position: fixed;
+  top:5%;
+  left:10%;
+  width:80%;
+  height:70%;
+  border:solid 1px #FFA400;
+  border-radius: 5px;
+  background-color: black;
+  overflow:auto;
+  padding:8px;
+}
+#foldertree_close{
+  position: fixed;
+  top:6%;
+  right:11%;
+  border:solid 1px #FFA400;
+  color:#FFA400;
+  padding:2px;
+}
+.treeil{
+  list-style-type:none;
+}
+.treei{
+  margin-right:5px;
+}
+.treeb{/*ツリーボタン*/
+  width:45px;
+  height: 35px;
+  padding:2px;
+  margin:5px;
+  margin-bottom: 5px;
+  color:#FFA400;
+  border:solid 1px #FFA400;
+}
+.tree_input{
+  width:200px;
+  display:inline;
+  margin-left: 5px;;
+}
+.tree_choese{
+  background-color:yellow;
+  opacity:0.7;
+  color: black;
 }

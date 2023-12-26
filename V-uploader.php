@@ -21,61 +21,70 @@
 </head>
 <BODY id = 'body' style='background:black;' >
     <HEADER class='text-center' style='color:#FFA400' id='header'>
-        <h1><a href='/'>Video Uploader</a></h1>
+        <h1><a href='/' class='a_none'>Video Uploader</a></h1>
         <div class='youkoso'><?php echo "ようこそ".$_SESSION["name"]."さん";?></div>
     </HEADER>
     <MAIN class='container' style='color:#fff;padding-bottom:0;' id='getlist'>
         <div id='uploadarea'>
+            <transition>
+            <div v-if="msg!==''" class="alert alert-warning" role="alert">
+              {{msg}}
+            </div>
+            </transition>
+
             <div class='row' style='margin-bottom:15px;' ><!--動画選択-->
-            <div class='col-1'></div>
-            <div class='col-10'>
+                <div class='col-1'></div>
+                <div class='col-10'>
                 <label for='formFile' class='form-label' >アップロードする動画を選択（複数可）</label>
                 <label class='btn btn-primary btn-lg' style='width:100%' >動画選択
                     <input type='file' class='form-control btn-lg' style='display:none;' id='formFile' @click='selectfiles($event)' multiple>
                 </label>
-            </div>
-            <div class='col-1'></div>
+                </div>
+                <div class='col-1'></div>
             </div><!--動画選択-->
+            <div v-if='["fileset","stop"].includes(stats)' class='row'><!--送信ボタン-->
+                <div class='col-1'></div>
+                <div class='col-10'>
+                    <button type='button' class='btn btn-primary btn-lg' style='width:50%' @click="uploading()">送 信</button>
+                    <button type='button' class='btn btn-warning btn-lg' style='width:50%' @click="cancel()">キャンセル</button>
+                </div>
+                <div class='col-1'></div>
+            </div><!--送信ボタン-->
+            <div v-if='["sending","stop"].includes(stats)' class='row fadein'><!--再開・停止ボタン-->
+                <div class='col-1'></div>
+                <div class='col-10'>
+                    <button type='button' class='btn btn-warning btn-lg' style='width:50%' @click="cancel()">キャンセル</button>
+                    <button type='button' class='btn btn-success btn-lg' style='width:50%' @click="pause()">中断</button>
+                    <button type='button' class='btn btn-success btn-lg' style='width:50%' @click="resume()">再開</button>
+                </div>
+                <div class='col-1'></div>
+            </div><!--再開・停止ボタン-->
+            <div v-if='["error"].includes(stats)' class='row fadein'><!--リトライ-->
+                <div class='col-1'></div>
+                <div class='col-10'>
+                    <button type='button' class='btn btn-success btn-lg' style='width:50%' @click="retry()">リトライ</button>
+                </div>
+                <div class='col-1'></div>
+            </div><!--リトライ-->
+            <div v-if='["sending","stop"].includes(stats)' class='row' style='margin-bottom:15px;'><!--progressbar-->
+                <div class='col-3 text-end'>{{result}}</div>
+                    <div class='col-8' style='padding:2px 12px 2px 2px;'>
+                        <div style='border:solid 1px #FFA400;height:100%;width:100%;'>
+                            <div class='text-center' style='height:100%;width:0%;padding:0;margin:0;background-color:#fff;color:#FFA400;' id='progressbar'>0%</div>
+                        </div>
+                    </div>
+                <div class='col-1'></div>
+            </div><!--progressbar-->
             <div class='row fadein' style='border:solid 1px #FFA400;margin-bottom:15px;'><!--ここにファイルリスト表示-->
                 <template v-for='(file,index) in filelist' :key='file.name'>
                     <div class="col-1"></div><div class="col-8">{{file.name}}</div><div class="col-2" :id="index">{{file.persent}}</div><div class="col-1"></div>
                 </template>
                 <!--{{filelist}}-->
             </div><!--ここにファイルリスト表示-->
-            <div class='row' style='margin-bottom:15px;'><!--progressbar-->
-            <div class='col-3 text-end'>{{result}}</div>
-            <div class='col-8' style='padding:2px 12px 2px 2px;'>
-                <div style='border:solid 1px #FFA400;height:100%;width:100%;'>
-                    <div class='text-center' style='height:100%;width:0%;padding:0;margin:0;background-color:#fff;color:#FFA400;' id='progressbar'>0%</div>
-                </div>
-            </div>
-            <div class='col-1'></div>
-            </div><!--progressbar-->
-            <div class='row'><!--送信ボタン-->
-            <div class='col-1'></div>
-            <div class='col-10'>
-                <button type='button' class='btn btn-primary btn-lg' style='width:50%' @click="uploading()">送 信</button>
-                <button type='button' class='btn btn-warning btn-lg' style='width:50%' @click="cancel()">キャンセル</button>
-            </div>
-            <div class='col-1'></div>
-            </div><!--送信ボタン-->
-            <div v-if='["sending","stop"].includes(stats)' class='row fadein'><!--再開・停止ボタン-->
-            <div class='col-1'></div>
-            <div class='col-10'>
-                <button type='button' class='btn btn-success btn-lg' style='width:50%' @click="resume()">再開</button>
-                <button type='button' class='btn btn-success btn-lg' style='width:50%' @click="pause()">ストップ</button>
-            </div>
-            <div class='col-1'></div>
-            </div><!--再開・停止ボタン-->
-            <div v-if='["error"].includes(stats)' class='row fadein'><!--リトライ-->
-            <div class='col-1'></div>
-            <div class='col-10'>
-                <button type='button' class='btn btn-success btn-lg' style='width:50%' @click="retry()">リトライ</button>
-            </div>
-            <div class='col-1'></div>
-            </div><!--リトライ-->
             <hr>
+            <div class='row text-center'><h3>未分類動画一覧</h3></div>
         </div>
+
         <div style='width:100%;height:50%;' id='Vmanager'>
             <iframe src="V-manager-iframe.php" width="100%" height="100%" id='Vmanager-frame'></iframe>
         </div>
@@ -86,8 +95,9 @@
         createApp({
             setup() {
                 const stats = ref('none')//none:初期値,fileset,sending,stop,success,error,cancel
-                const filelist = ref([])
-                //const E_filelist = ref([])
+                const filelist = ref([])//upload files
+                const msg = ref('') //alert msg
+
                 var errfilelist =""
                 const setfilelist = (i,name,persent) =>{
                     filelist.value[i]={'name':name,'persent':persent}
@@ -137,7 +147,7 @@
                 const selectfiles =(e)=>{//動画選択
                     console_log('selectfiles')
                     if(flow.isUploading()){
-                        alert("ファイル送信中です。");
+                        msg.value = "ファイル送信中です。";
                     }
                     filelist.value = []
                     let elem = document.getElementById(e.target.id)
@@ -152,28 +162,30 @@
                     if(flowfile.length===0){
                         alert("ファイルが指定されてません。");
                     }else if(flow.isUploading()){
-                        alert("ファイル送信中です。");
+                        msg.value = "ファイル送信中です。";
                     }else{
                         errfilelist = ""
                         console_log("アップロード実行")
                         index=0
                         flow.upload();
-                        //stats.value = 'sending'　プログレスバーで制御
-                        //IDD_Write_ForClassOBJ('LocalParameters',{'id':flow})
                     }
                 }
                 const resume = () =>{//アップロード再開
                     console_log("アップロード再開")
                     if(flow.isUploading()){
-                        alert("ファイル送信中です。");
+                        msg.value = "ファイル送信中です。";
                     }else{
-                        alert("おっと、寝てたわ。");
+                        msg.value = "再開します。";
                         flow.resume();
                     }
                 }
                 const cancel = () =>{
+                    if(flowfile.length===0){
+                        return
+                    }
                     console_log("アップロードキャンセル")
-                    alert("アップロードキャンセル");
+                    //alert("アップロードキャンセル");
+                    msg.value = "キャンセルしました";
                     index = 0
                     rindex=0
                     flow.cancel();
@@ -183,7 +195,7 @@
                     stats.value='cancel'
                 }
                 const pause = () =>{
-                    alert("おやすみ。");
+                    msg.value = "おやすみ。";
                     flow.pause()
                 }
                 const retry = () =>{
@@ -250,8 +262,6 @@
                     
                     index=0
                     //document.getElementById('filelist').innerHTML = errfilelist
-                    //get_files()
-                    //setframeheight()
                     document.getElementById("Vmanager-frame").contentWindow.location.reload();
                     
                 })
@@ -274,12 +284,15 @@
                 }
                 watch(stats,()=>{
                     console_log('watch stats => '+stats.value)
-                    setTimeout(setframeheight, 500);//0.5s
-                    //setframeheight()
+                    setTimeout(setframeheight, 1000);//0.5s
+                })
+                watch(msg,()=>{
+                    console_log('watch msg => '+stats.value)
+                    setTimeout(()=>{msg.value=""}, 3000);//1.5s
+                    setTimeout(setframeheight, 1000);//0.5s
                 })
 
                 onMounted(() => {
-                    //get_files()
                     setframeheight()
                 });
 
@@ -295,6 +308,7 @@
                     resume,
                     pause,
                     result,
+                    msg,
                 };
             }
         }).mount('#getlist');

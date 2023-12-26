@@ -6,6 +6,24 @@ function log_writer($pgname,$msg){
     $log = print_r($msg,true);
     file_put_contents("error_log","[".date("Y/m/d H:i:s")."] ORG_LOG from [".$_SERVER["PHP_SELF"]." -> ".$pgname."] => ".$log."\n",FILE_APPEND);
 }
+// =========================================================
+// オリジナルログ出力(error_log)
+// =========================================================
+function next_char($char){
+    if($char>=0 and $char<9){
+        return $char+1;
+    }else if($char==9){
+        return "A";
+    }else if($char>="A" and $char<"Z"){
+        return ++$char;
+    }else if($char==="Z"){
+        return "a";
+    }else if($char>="a" and $char<"z"){
+        return ++$char;
+    }else{
+        return "error";
+    }
+}
 
 
 // =========================================================
