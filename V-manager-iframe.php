@@ -38,10 +38,10 @@
                     <p style='color:#fff;margin-bottom: 4px;'>保存日時：{{file.insdate}}</p>
                     <label class="form-check-label" :for='`list[${index}][titel]`' style='color:#fff;'>タイトル：</label>
                     <input type='text' class="form-control" :value=file.titel :name='`list[${index}][titel]`' :id='`list[${index}][titel]`'>
-                    <label class="form-check-label" :for='`list[${index}][name]`' style='color:#fff;'>フォルダ：{{file.name}}</label>
+                    <label class="form-check-label" :for='`list[${index}][name]`' style='color:#fff;'>フォルダ：{{file.fullLvName}}</label>
                     <button type='button' class='btn btn-outline-light ib' @click='foldersetOpen(index,file.fileNo)'><i class="bi bi-folder-plus h1"></i></button>
 
-                    <input type='hidden' class="form-control" :value=file.name :name='`list[${index}][name]`' :id='`list[${index}][name]`' placeholder="例：2020年/5月/運動会">
+                    <!--<input type='hidden' class="form-control" :value=file.name :name='`list[${index}][name]`' :id='`list[${index}][name]`' placeholder="例：2020年/5月/運動会">-->
                     <!--未実装<label class="form-check-label" :for='`list[${index}][tags]`' style='color:#fff;'>タグ：</label>
                     <i class="bi bi-hash h1"></i>
                     <input type='text' class="form-control" :value=file.tags :name='`list[${index}][tags]`' :id='`list[${index}][tags]`' placeholder="例：#子供#運動会">-->
@@ -50,7 +50,7 @@
             </template>
             </div>
         </div><!--動画一覧-->
-        <div v-show='foldertreedisp' id='foldertree'>
+        <div v-show='foldertreedisp' id='foldertree'><!--フォルダツリー-->
             <div id='foldertree_close' role='button' @click='foldersetClose()'>閉じる</div>
             <ul style='padding:0;'>
                 <template v-for='(list,index) in tree' :key='list.level'>
@@ -72,7 +72,7 @@
                     </li>
                 </template>
             </ul>
-        </div>
+        </div><!--フォルダツリー-->
     </MAIN>
     <FOOTER>
         <div class='row'>
@@ -163,10 +163,10 @@
                 }
 
                 //フォルダ構成の編集メソッド
-                const foldernameset = (index) =>{
+                const foldernameset = (index) =>{//新規フォルダの名称入力ON
                     tree.value[index]["newfolder"] = "display"
                 }
-                const ins_tree = (index) =>{
+                const ins_tree = (index) =>{//新規フォルダの作成
                     let uplevel = tree.value[index]["lv"]
                     let name = tree.value[index]["newname"]
                     if(name.length===0){
