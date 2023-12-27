@@ -1,7 +1,7 @@
 <?php
 require "php_header.php";
 if(MAIN_DOMAIN!=="localhost:81"){
-  session_regenerate_id();
+  //session_regenerate_id();
 }
 $success=false;
 
@@ -34,11 +34,12 @@ if(!empty($_POST)){
       $stmt->bindValue("name", $_POST["nickname"], PDO::PARAM_STR);
       $stmt->execute();
 
-      $sql = "insert into levels(uid,level,name) values(:id,:level,:name)";
+      $sql = "insert into levels(uid,level,name,fullLvName) values(:id,:level,:name,:fullLvName)";
       $stmt = $pdo_h->prepare($sql);
       $stmt->bindValue("id", $_POST["id"], PDO::PARAM_STR);
       $stmt->bindValue("level", "0000000000", PDO::PARAM_STR);
       $stmt->bindValue("name", "フォルダ未選択", PDO::PARAM_STR);
+      $stmt->bindValue("fullLvName", "フォルダ未選択", PDO::PARAM_STR);
       $stmt->execute();
 
       $_SESSION["uid"] = $_POST["id"];
@@ -51,6 +52,7 @@ if(!empty($_POST)){
       $success=true;
 
     }catch(Exception $e){
+      log_writer("\$e",$e);
       $_SESSION["MSG"]="登録に失敗しました。ユーザーIDがすでに登録されてます。";
       $pdo_h->rollBack();
     }
