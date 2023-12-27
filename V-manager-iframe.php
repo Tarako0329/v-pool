@@ -166,7 +166,7 @@
                     document.getElementById("li_"+tree.value[index]["level"]).className = "treeil fw-bold tree_choese"
 
                     files.value[Findex]["level"] = tree.value[index]["level"]
-                    files.value[Findex]["name"] = tree.value[index]["name"]
+                    files.value[Findex]["fullLvName"] = tree.value[index]["name"]
                 }
 
                 //フォルダ構成の編集メソッド
