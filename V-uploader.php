@@ -82,11 +82,11 @@
                 <!--{{filelist}}-->
             </div><!--ここにファイルリスト表示-->
             <hr>
-            <div class='row text-center'><h3>未分類動画一覧</h3></div>
+            <div class='row text-center' style='margin-bottom:0;'><h3>未分類動画一覧</h3></div>
         </div>
 
         <div style='width:100%;height:50%;' id='Vmanager'>
-            <iframe src="V-manager-iframe.php" width="100%" height="100%" id='Vmanager-frame'></iframe>
+            <iframe src="V-manager-iframe.php?lv=0%" width="100%" height="100%" id='Vmanager-frame'></iframe>
         </div>
 
     </MAIN>

@@ -20,6 +20,7 @@
 	<TITLE>Video Uploader</TITLE>
 </head>
 <BODY id = 'body' style='background:black;' >
+	<div id = 'app'>
 	<HEADER class='text-center' style='color:#FFA400;height:130px;'>
 		<h1>Video Uploader</h1>
 		<div class='youkoso'><?php echo "user:".$_SESSION["name"];?></div>
@@ -35,66 +36,26 @@
 		</div><!--送信ボタン-->
 	</HEADER>
 	<MAIN class='container' style='color:#fff;padding-top:130px;'>
-		
-		<div class='row' id='getlist'>
-			<div>検索：<input type="text" v-model="search" /></div>
-			
-			<template  v-for='file in updated_users'>
-				<div v-if=file.type==='directory' class ='col-12'>{{file.src}}</div>
-				<div v-if=file.type==='file' class ='col-4 col-md-3 col-lg-2 col-xl-1'>
-					<video style='max-width:100%;width:100%;'preload='metadata' controls muted v-bind:src="file.src"></video>
-					<p style='color:#fff;'>{{file.name}}</p>
-				</div>
-			</template>
-			<div ref="observe_element">この要素を監視します</div>
-		</div>
-
 	</MAIN>
 	<FOOTER>
 		
 	</FOOTER>
+	</div>
 	<script>
 		const { createApp, ref, onMounted, computed } = Vue;
 		createApp({
 			setup() {
 				const message = ref('clear');
-				const files = ref([])
-				const search = ref('')
-				const observe_element = ref(null)
 				
 				onMounted(() => {
 					console.log(observe_element.value)
-					const observer = new IntersectionObserver(entries => {
-						const entry = entries[0]
-						if (entry && entry.isIntersecting) {
-							console.log('画面に入ったよ')
-						}
-					})
-					observer.observe(observe_element.value)
-				});
-
-				const updated_users = computed(() => {
-				  let searchWord = search.value.toString().trim();
-				  if (searchWord === "") return files.value;
-				
-				  return files.value.filter((file) => {
-					return (
-					  file.type.includes(searchWord) ||
-					  file.src.includes(searchWord) ||
-					  file.name.includes(searchWord)
-					);
-				  });
 				});
 
 				return {
 					message,
-					files,
-					search,
-					updated_users,
-					observe_element,
 				};
 			}
-		}).mount('#getlist');
+		}).mount('#app');
 	</script><!--vue-->
 	<script>
  

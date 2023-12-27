@@ -27,7 +27,7 @@
     </HEADER>
     <MAIN style='padding-bottom:0;padding-left:10px;padding-right:10px;'>
         <div style='width:100%;height:100%;'>
-            <iframe src="V-manager-iframe.php" width="100%" height="100%"></iframe>
+            <iframe src="V-manager-iframe.php?lv=0%" width="100%" height="100%"></iframe>
         </div>
     </MAIN>
 

@@ -1,16 +1,18 @@
 <?php
     require "php_header.php";
+    /*
 	if(empty($_SESSION["uid"])){
         $_SESSION["MSG"]="セッション切れです。再度ログインしてください。";
         header("HTTP/1.1 301 Moved Permanently");
         header("Location: login.php");
         exit();
     }
+    */
    //var_dump(getFileList("./upload/ryota/"));
+   $lv = !empty($_GET["lv"])?$_GET["lv"]:"%";
 ?>
 <!DOCTYPE html>
 <html lang='ja'>
-
 <head>
     <?php 
     //共通部分、bootstrap設定、フォントCND、ファビコン等
@@ -19,8 +21,11 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 </head>
 <BODY id = 'body' style='background:black;' >
+    <HEADER style='height: 40px;'>
+        <div id='folderopen' @click='foldernameset(index)'><i class="bi bi-folder-plus h3 treei"></i>新規作成</div>
+    </HEADER>
     <form action='update.php' method="post" id='getlist'>
-    <MAIN class='container' style='color:#fff;padding:0;' >
+    <MAIN class='container' style='color:#fff;padding:10px 0 0 0;' >
         <hr>
         <div id='mibunrui'><!--動画一覧-->
             
@@ -74,6 +79,7 @@
             </ul>
         </div><!--フォルダツリー-->
     </MAIN>
+    <!--
     <FOOTER>
         <div class='row'>
             <div class='col-1'></div>
@@ -83,6 +89,7 @@
             <div class='col-1'></div>
         </div>
     </FOOTER>
+    -->
     </form>
     <script>//vue.js
         const { createApp, ref, onMounted, reactive,computed } = Vue;
@@ -91,7 +98,7 @@
                 const files = ref()
                 const get_files = () => {//アップロード後の分類等未設定の動画一覧を取得
                     axios
-                    .get('ajax_getnoinfofiles.php')
+                    .get('ajax_get_files.php?lv=<?php echo $lv;?>')
                     .then((response) => {
                         files.value = [...response.data],
                         console_log('get_files succsess')

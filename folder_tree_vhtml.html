@@ -1,0 +1,31 @@
+        <div v-show='foldertreedisp' id='foldertree'><!--フォルダツリー-->
+            <!--
+                foldersetClose()
+                tree
+                ins_tree(index)
+                choese(index)
+                foldernameset(index)
+                
+            -->
+            <div id='foldertree_close' role='button' @click='foldersetClose()'>閉じる</div>
+            <ul style='padding:0;'>
+                <template v-for='(list,index) in tree' :key='list.level'>
+                    <li v-if='index===0' :style='{"padding-left":list.padding}' class='treeil'>
+                        <i class="bi bi-folder-plus h3 treei" style='color:#FFA400;'></i>
+                        <input class="form-control form-control-sm tree_input" type='text' placeholder="NEW フォルダ名" v-model='list.newname'>
+                        <button type='button' class='btn btn-outline-light treeb' @click='ins_tree(index)'>作成</button>
+                    </li>
+                    <li :style='{"padding-left":list.padding}' class='treeil' :id='"li_"+list.level' @click='choese(index)' role='button'><i class="bi bi-folder h3 treei" :id='"i_"+list.level'></i>{{list.name}}</li>
+                    <li v-if='index!==0' :style='{"padding-left":list.next_padding}' class='treeil'>
+                        <template v-if='list.newfolder==="none"' >
+                            <a href="#" style='color:#FFA400;' @click='foldernameset(index)'><i class="bi bi-folder-plus h3 treei"></i>新規作成</a>
+                        </template>
+                        <template v-if='list.newfolder==="display"' >
+                            <i class="bi bi-folder-plus h3 treei" style='color:#FFA400;'></i>
+                            <input class="form-control form-control-sm tree_input" type='text' placeholder="NEW フォルダ名" v-model='list.newname'>
+                            <button type='button' class='btn btn-outline-light treeb' @click='ins_tree(index)'>作成</button>
+                        </template>
+                    </li>
+                </template>
+            </ul>
+        </div><!--フォルダツリー-->
