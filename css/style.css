@@ -85,7 +85,7 @@ button{
 }
 #foldertree{
   position: fixed;
-  top:5%;
+  top:8%;
   left:10%;
   width:80%;
   height:70%;
@@ -97,7 +97,7 @@ button{
 }
 #foldertree_close{
   position: fixed;
-  top:6%;
+  top:9%;
   right:11%;
   border:solid 1px #FFA400;
   color:#FFA400;
