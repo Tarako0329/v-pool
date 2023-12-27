@@ -15,12 +15,6 @@ ver0.03.2:開発中：動画閲覧[フォルダ選択]bugfix
 
 【Issues】
 
-
-ローカルからテスト環境へ
-cd /home/ifduktdo/public_html/v-pool
-git fetch --all
-git reset --hard origin/main
-
 ローカルからテスト環境へ
 cd /home/pcntfsrg/public_html/v-pool
 git fetch --all
