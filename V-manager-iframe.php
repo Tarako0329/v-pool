@@ -21,11 +21,11 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 </head>
 <BODY id = 'body' style='background:black;' >
-    <HEADER style='height: 40px;'>
+    <!--<HEADER style='height: 40px;'>
         <div id='folderopen' @click='foldernameset(index)'><i class="bi bi-folder-plus h3 treei"></i>新規作成</div>
-    </HEADER>
+    </HEADER>-->
     <form action='update.php' method="post" id='getlist'>
-    <MAIN class='container' style='color:#fff;padding:10px 0 0 0;' >
+    <MAIN class='container' style='color:#fff;padding:0;' >
         <hr>
         <div id='mibunrui'><!--動画一覧-->
             

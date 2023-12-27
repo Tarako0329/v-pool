@@ -1,13 +1,14 @@
 ver0.01.1:my first commit
-ver0.01.2:開発中：under development
-ver0.01.3:開発中：under development
-ver0.01.4:開発中：under development
-ver0.01.5:開発中：under development
-ver0.01.6:開発中：マニフェスト完
-ver0.01.7:開発中：bugfix
-ver0.01.8:開発中：アップロード制御の整理
-ver0.01.9:開発中：アップロード制御の整理/セッション管理
-ver0.02.0:開発中：動画管理機能[フォルダ機能]
+ver0.01.2:開発済：under development
+ver0.01.3:開発済：under development
+ver0.01.4:開発済：under development
+ver0.01.5:開発済：under development
+ver0.01.6:開発済：マニフェスト完
+ver0.01.7:開発済：bugfix
+ver0.01.8:開発済：アップロード制御の整理
+ver0.01.9:開発済：アップロード制御の整理/セッション管理
+ver0.02.0:開発済：動画管理機能[フォルダ機能]
+ver0.02.0:開発中：動画閲覧[フォルダ選択]
 
 
 【Issues】
