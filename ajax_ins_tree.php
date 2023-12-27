@@ -10,15 +10,18 @@
       $notlv = "";
       $start_point = 0;
     }else{
-      $ckLv = $_GET["lv"];
-      $notlv = $_GET["lv"]."0";
+      $ckLv = $_GET["lv"]."%";
+      $notlv = $_GET["lv"]."0%";
       $start_point = strlen($_GET["lv"]);
+      $upperLv = substr($_GET["lv"]."000000000",0,10);
+      log_writer('\$upperLv',$upperLv);
+      
     }
     $sql = "select * from levels where uid = :id and level like :lv and name =:name and level not like :notlv";
     $stmt = $pdo_h->prepare($sql);
     $stmt->bindValue("id", $_SESSION["uid"], PDO::PARAM_STR);
-    $stmt->bindValue("lv", $ckLv."%", PDO::PARAM_STR);
-    $stmt->bindValue("notlv", $notlv."%", PDO::PARAM_STR);
+    $stmt->bindValue("lv", $ckLv, PDO::PARAM_STR);
+    $stmt->bindValue("notlv", $notlv, PDO::PARAM_STR);
     $stmt->bindValue("name", $_GET["name"], PDO::PARAM_STR);
     $stmt->execute();
     $dataset = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -31,16 +34,10 @@
       $sql = "select (level) as maxlv,name from levels where uid = :id and level like :lv order by level desc";
       $stmt = $pdo_h->prepare($sql);
       $stmt->bindValue("id", $_SESSION["uid"], PDO::PARAM_STR);
-      $stmt->bindValue("lv", $ckLv."%", PDO::PARAM_STR);
+      $stmt->bindValue("lv", $ckLv, PDO::PARAM_STR);
       $stmt->execute();
       $dataset = $stmt->fetchAll(PDO::FETCH_ASSOC);
-      /*
-      if(next_char(substr($dataset[0]["maxlv"],strlen($_GET["lv"]),1))!=="error"){
-        $lvel = substr($dataset[0]["maxlv"],0,(strlen($_GET["lv"]))).next_char(substr($dataset[0]["maxlv"],strlen($_GET["lv"]),1)).substr($dataset[0]["maxlv"],(strlen($_GET["lv"]) + 1));  
-      }else{
-        $return_satas = "error:フォルダ数の上限に達しました";
-      }
-      */
+
       if(next_char(substr($dataset[0]["maxlv"],$start_point,1))!=="error"){
         $lvel = substr($dataset[0]["maxlv"],0,($start_point)).next_char(substr($dataset[0]["maxlv"],$start_point,1)).substr("0000000000",($start_point + 1));  
       }else{
@@ -51,13 +48,27 @@
     log_writer('\$lvel',$lvel);
     
     if($return_satas === "success"){
+      if($_GET["lv"]!=="0"){//上位フォルダのフルパス名取得
+        $sql = "select fullLvName from levels where uid = :id and level = :upperLv";
+        $stmt = $pdo_h->prepare($sql);
+        $stmt->bindValue("id", $_SESSION["uid"], PDO::PARAM_STR);
+        $stmt->bindValue("upperLv", $upperLv, PDO::PARAM_STR);
+        $stmt->execute();
+        $dataset = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $fullLvName = $dataset[0]["fullLvName"]." > ".$_GET["name"];
+      }else{
+        $fullLvName = $_GET["name"];
+      }
+      log_writer('\$fullLvName',$fullLvName);
       try{
         $pdo_h->beginTransaction();
-        $sql = "insert into levels(uid,level,name) values(:id ,:lv ,:name)";
+        $sql = "insert into levels(uid,level,name,fullLvName) values(:id ,:lv ,:name ,:fullLvName)";
         $stmt = $pdo_h->prepare($sql);
         $stmt->bindValue("id", $_SESSION["uid"], PDO::PARAM_STR);
         $stmt->bindValue("lv", $lvel, PDO::PARAM_STR);
         $stmt->bindValue("name", $_GET["name"], PDO::PARAM_STR);
+        $stmt->bindValue("fullLvName", $fullLvName, PDO::PARAM_STR);
         $stmt->execute();
         $pdo_h->commit();
       }catch(Exception $e){

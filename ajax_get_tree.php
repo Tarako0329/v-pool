@@ -6,6 +6,7 @@
             if(level='0000000000',0, replace(level,'0','')) as lv 
             ,level
             ,name
+            ,fullLvName
             ,concat(length(if(level='0000000000',0, replace(level,'0',''))) * 10,'px') as padding
             ,concat((length(if(level='0000000000',0, replace(level,'0','')))+1) * 10,'px') as next_padding
             ,'none' as newfolder

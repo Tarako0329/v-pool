@@ -166,7 +166,7 @@
                     document.getElementById("li_"+tree.value[index]["level"]).className = "treeil fw-bold tree_choese"
 
                     files.value[Findex]["level"] = tree.value[index]["level"]
-                    files.value[Findex]["fullLvName"] = tree.value[index]["name"]
+                    files.value[Findex]["fullLvName"] = tree.value[index]["fullLvName"]
                 }
 
                 //フォルダ構成の編集メソッド
@@ -176,6 +176,7 @@
                 const ins_tree = (index) =>{//新規フォルダの作成
                     let uplevel = tree.value[index]["lv"]
                     let name = tree.value[index]["newname"]
+                    console_log(`${uplevel}:${name}`)
                     if(name.length===0){
                         alert("フォルダ名を入力してください")
                         return

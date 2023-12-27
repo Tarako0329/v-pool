@@ -8,14 +8,19 @@
   */
   $lv = $_GET["lv"];
 
-  //$sql = "select fl.*,lv.name from filelist as fl left join levels as lv on fl.level=lv.level and  fl.uid=lv.uid where fl.uid = :id and (fl.level = :level or fl.title = :title or fl.tags = :tags) order by fl.insdate desc";
+  $sql = "select fl.*,lv.name,lv.fullLvName 
+  from filelist as fl 
+  left join levels as lv on fl.level=lv.level and  fl.uid=lv.uid 
+  where fl.uid = :id and fl.level like :lv order by fl.insdate desc";
+  /*
   $sql = "select 
-      *,concat(lv1name,lv2name,lv3name,lv4name,lv5name,lv6name,lv7name,lv8name,lv9name,lv10name) as fullLvName 
-    from filelist_view 
+      *
+    from filelist
     where 
       uid = :id 
       and level like :lv
     order by insdate desc";
+  */
   $stmt = $pdo_h->prepare($sql);
   $stmt->bindValue("id", $_SESSION["uid"], PDO::PARAM_STR);
   $stmt->bindValue("lv",$lv , PDO::PARAM_STR);
