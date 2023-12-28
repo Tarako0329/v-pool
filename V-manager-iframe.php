@@ -48,7 +48,6 @@
                     <p style='color:#fff;margin-bottom: 4px;'>保存日時：{{file.insdate}}</p>
                     <label class="form-check-label" :for='`list[${index}][titel]`' style='color:#fff;'>タイトル：</label>
                     <input type='text' class="form-control" :value=file.titel :name='`list[${index}][titel]`' :id='`list[${index}][titel]`'>
-                    <!--<label class="form-check-label" :for='`list[${index}][titel]FB`' style='color:#fff;'>フォルダ：{{file.fullLvName}}</label>-->
                     <p style='color:#fff;margin-bottom: 4px;'>フォルダ：{{file.fullLvName}}</p>
                     <button type='button' class='btn btn-outline-light ib' @click='foldersetOpen(index,file.fileNo,"mng")' :id='`list[${index}][titel]FB`'><i class="bi bi-folder-plus h1"></i></button>
                     <button type='button' class='btn btn-outline-light ib' @click='filetrash(file.fileNo,file.filename)'><i class="bi bi-trash3 h1"></i></button>

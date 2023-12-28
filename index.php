@@ -37,7 +37,7 @@
 	</HEADER>
 	<MAIN class='container' style='color:#fff;padding-top:130px;'>
 		<div style='width:100%;height:100%;' id='Vmanager'>
-      <iframe src="V-manager-iframe.php?lv=%" width="100%" height="100%" id='Vmanager-frame'></iframe>
+      <iframe src="V-manager-iframe.php?lv=%" width="95%" height="100%" id='Vmanager-frame'></iframe>
     </div>
 
 	</MAIN>
