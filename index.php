@@ -52,7 +52,7 @@
 				const message = ref('clear');
 				
 				onMounted(() => {
-					console.log(observe_element.value)
+					console.log("onMounted")
 				});
 
 				return {

@@ -97,11 +97,13 @@ button{
 }
 #foldertree_close{
   position: fixed;
-  top:52px;
+  top:55px;
   right:11%;
-  border:solid 1px #FFA400;
+  border:none;
   color:#FFA400;
-  padding:2px;
+  padding:4px;
+  width: 70px;
+  height: 40px;
 }
 .treeil{
   list-style-type:none;

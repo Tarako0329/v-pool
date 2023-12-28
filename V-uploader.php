@@ -54,7 +54,7 @@
                 <div class='col-1'></div>
                 <div class='col-10'>
                     <button type='button' class='btn btn-warning btn-lg' style='width:50%' @click="cancel()">キャンセル</button>
-                    <button type='button' class='btn btn-success btn-lg' style='width:50%' @click="pause()">中断</button>
+                    <button type='button' class='btn btn-success btn-lg' style='width:50%' @click="pause()">一時停止</button>
                     <button type='button' class='btn btn-success btn-lg' style='width:50%' @click="resume()">再開</button>
                 </div>
                 <div class='col-1'></div>

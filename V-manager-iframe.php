@@ -55,7 +55,7 @@
             </div>
         </div><!--動画一覧-->
         <div v-show='foldertreedisp' id='foldertree'><!--フォルダツリー-->
-            <div id='foldertree_close' role='button' @click='foldersetClose()'>閉じる</div>
+            <div class='text-end' id='foldertree_close' role='button' @click='foldersetClose()'>閉じる</div>
             <ul style='padding:0;'>
                 <template v-for='(list,index) in tree' :key='list.level'>
                     <div v-show='folderAreaRole==="mng"'><!--フォルダ編集モード-->
@@ -147,7 +147,8 @@
                     folderAreaRole.value = role
                 }
                 const foldersetClose = () =>{//フォルダ選択を反映し、閉じる
-                    if(folderAreaRole==="mng"){
+                    console_log("foldersetClose")
+                    if(folderAreaRole.value==="mng"){
                         axios
                         .get(`ajax_upd_filefolder.php?lv=${files.value[Findex]['level']}&fileNo=${FfileNo}`)
                         .then((response) => {
@@ -168,7 +169,7 @@
                         Findex = null
                         FfileNo = null
 
-                    }else if(folderAreaRole==="mng"){
+                    }else if(folderAreaRole.value==="disp"){
                         foldertreedisp.value = false
                     }else{
                         return
