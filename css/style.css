@@ -63,6 +63,8 @@ button{
   position:fixed;
   top:0;
   right:0;
+  color:#FFA400;
+  text-decoration: none;
 }
 
 .v-enter-active,

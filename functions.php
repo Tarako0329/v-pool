@@ -94,7 +94,7 @@ function passEx($str,$uid,$key){
 	}else{
 		$rtn = $str;
 	}
-	return $rtn;
+	return substr($rtn,0,20);
 }
 // =========================================================
 // 可逆暗号(日本語文字化け対策)
