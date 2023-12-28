@@ -32,10 +32,8 @@
         </transition>
     </HEADER>
     <MAIN class='container' style='color:#fff;padding:35px 0 0 0;' >
-
         <hr>
         <div id='mibunrui'><!--動画一覧-->
-            
             <div class='row'>
             <template v-for='(file,index) in files' :key='file.fileNo'>
                 <div class ='col-4 col-lg-2' style='margin-bottom:20px;'>

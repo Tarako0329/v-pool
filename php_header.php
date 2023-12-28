@@ -20,7 +20,7 @@ if(MAIN_DOMAIN==="localhost:81"){
   $id="demo";
   $pass="00000000";
 }else{
-  $time=date('Ymd')."up";
+  $time=date('Ymd')."up11";
   $id="";
   $pass="";
 }
