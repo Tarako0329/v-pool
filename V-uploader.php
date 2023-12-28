@@ -22,7 +22,7 @@
 <BODY id = 'body' style='background:black;' >
     <HEADER class='text-center' style='color:#FFA400' id='header'>
         <h1><a href='/' class='a_none'>Video Uploader</a></h1>
-        <div class='youkoso'><?php echo "ようこそ".$_SESSION["name"]."さん";?></div>
+        <div class='youkoso'><?php echo "ID:".$_SESSION["uid"];?></div>
     </HEADER>
     <MAIN class='container' style='color:#fff;padding-bottom:0;' id='getlist'>
         <div id='uploadarea'>

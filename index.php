@@ -23,7 +23,7 @@
 	<div id = 'app' style='width:100%;height:100%;'>
 	<HEADER class='text-center' style='color:#FFA400;height:130px;'>
 		<h1>Video Uploader</h1>
-		<div class='youkoso'><?php echo "user:".$_SESSION["name"];?></div>
+		<div class='youkoso'><?php echo "ID:".$_SESSION["uid"];?></div>
 		<div class='logoff'><a href="logoff.php" class='a_none'>logoff</a></div>
 		<div class='row'><!--送信ボタン-->
 			<div class='col-1'></div>

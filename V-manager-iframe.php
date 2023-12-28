@@ -44,12 +44,13 @@
                         <input class="form-check-input" type="checkbox" role="switch" :id="index" :name='`list[${index}][upd]`'>
                         <label class="form-check-label" :for="index">一括更新対象</label>
                     </div>-->
-                    <p style='color:#fff;margin-bottom: 4px;'>ファイル名：{{file.before_name}}<i class="bi bi-trash3 ftrash"></i></p>
+                    <p style='color:#fff;margin-bottom: 4px;'>ファイル名：{{file.before_name}}</p>
                     <p style='color:#fff;margin-bottom: 4px;'>保存日時：{{file.insdate}}</p>
                     <label class="form-check-label" :for='`list[${index}][titel]`' style='color:#fff;'>タイトル：</label>
                     <input type='text' class="form-control" :value=file.titel :name='`list[${index}][titel]`' :id='`list[${index}][titel]`'>
-                    <label class="form-check-label" style='color:#fff;'>フォルダ：{{file.fullLvName}}</label>
-                    <button type='button' class='btn btn-outline-light ib' @click='foldersetOpen(index,file.fileNo,"mng")'><i class="bi bi-folder-plus h1"></i></button>
+                    <!--<label class="form-check-label" :for='`list[${index}][titel]FB`' style='color:#fff;'>フォルダ：{{file.fullLvName}}</label>-->
+                    <p style='color:#fff;margin-bottom: 4px;'>フォルダ：{{file.fullLvName}}</p>
+                    <button type='button' class='btn btn-outline-light ib' @click='foldersetOpen(index,file.fileNo,"mng")' :id='`list[${index}][titel]FB`'><i class="bi bi-folder-plus h1"></i></button>
                     <button type='button' class='btn btn-outline-light ib' @click='filetrash(file.fileNo,file.filename)'><i class="bi bi-trash3 h1"></i></button>
 
                     <!--未実装<label class="form-check-label" :for='`list[${index}][tags]`' style='color:#fff;'>タグ：</label>
@@ -61,13 +62,13 @@
             </div>
         </div><!--動画一覧-->
         <div v-show='foldertreedisp' id='foldertree'><!--フォルダツリー-->
-            <div class='text-end' id='foldertree_close' role='button' @click='foldersetClose()'>閉じる</div>
+            <div class='text-end' id='foldertree_close' role='button' @click='foldersetClose()'>✖</div>
             <ul style='padding:0;'>
                 <template v-for='(list,index) in tree' :key='list.level'>
                     <div v-show='folderAreaRole==="mng"'><!--フォルダ編集モード-->
                         <li v-if='index===0' :style='{"padding-left":list.padding}' class='treeil'>
                         <i class="bi bi-folder-plus h3 treei" style='color:#FFA400;'></i>
-                        <input class="form-control form-control-sm tree_input" type='text' placeholder="NEW フォルダ名" v-model='list.newname'>
+                        <input class="form-control form-control-sm tree_input" type='text' placeholder="フォルダ名" v-model='list.newname'>
                         <button type='button' class='btn btn-outline-light treeb' @click='ins_tree(index)'>作成</button>
                         </li>
                         <li :style='{"padding-left":list.padding}' class='treeil' :id='"li_"+list.level' @click='choese_folder(index)' role='button'>
@@ -78,7 +79,7 @@
                             </template>
                             <template v-if='list.newfolder==="display"' >
                             <i class="bi bi-folder-plus h3 treei" style='color:#FFA400;'></i>
-                            <input class="form-control form-control-sm tree_input" type='text' placeholder="NEW フォルダ名" v-model='list.newname'>
+                            <input class="form-control form-control-sm tree_input" type='text' placeholder="フォルダ名" v-model='list.newname'>
                             <button type='button' class='btn btn-outline-light treeb' @click='ins_tree(index)'>作成</button>
                             </template>
                         </li>
@@ -182,6 +183,11 @@
                         .then((response) => {
                             console_log(response)
                             if(response.data==="success"){
+                                if(before_choese_i!==undefined){
+                                    before_choese_i.className = "bi bi-folder h3 treei"
+                                    before_choese_li.className = "treeil"
+                                }
+
                                 console_log('ajax_upd_filefolder succsess')
                             }else{
                                 alert(response.data)
@@ -193,9 +199,9 @@
                             console_log(response)
                         });
 
-                        foldertreedisp.value = false
-                        Findex = null
-                        FfileNo = null
+                        foldertreedisp.value = false    //ウィンドを閉じる
+                        Findex = null   //編集ファイルリストのインデックスをクリア
+                        FfileNo = null  //編集ファイルのファイルNOをクリア
 
                     }else if(folderAreaRole.value==="disp"){
                         foldertreedisp.value = false
