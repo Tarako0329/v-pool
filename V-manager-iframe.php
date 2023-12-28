@@ -10,6 +10,7 @@
     */
    //var_dump(getFileList("./upload/ryota/"));
    $lv = !empty($_GET["lv"])?$_GET["lv"]:"%";
+   $token = csrf_create()
 ?>
 <!DOCTYPE html>
 <html lang='ja' style='overflow-x: hidden;'>
@@ -26,6 +27,12 @@
         <div id='folderopen' @click='foldersetOpen("","","disp")' role="button">フォルダ選択 <i class="bi bi-folder2-open h3 treei"></i></div>
     </HEADER>
     <MAIN class='container' style='color:#fff;padding:35px 0 0 0;' >
+            <transition>
+                <div v-if="msg!==''" class="alert alert-warning" role="alert">
+                    {{msg}}
+                </div>
+            </transition>
+
         <hr>
         <div id='mibunrui'><!--動画一覧-->
             
@@ -39,12 +46,13 @@
                         <input class="form-check-input" type="checkbox" role="switch" :id="index" :name='`list[${index}][upd]`'>
                         <label class="form-check-label" :for="index">一括更新対象</label>
                     </div>-->
-                    <p style='color:#fff;margin-bottom: 4px;'>ファイル名：{{file.before_name}}</p>
+                    <p style='color:#fff;margin-bottom: 4px;'>ファイル名：{{file.before_name}}<i class="bi bi-trash3 ftrash"></i></p>
                     <p style='color:#fff;margin-bottom: 4px;'>保存日時：{{file.insdate}}</p>
                     <label class="form-check-label" :for='`list[${index}][titel]`' style='color:#fff;'>タイトル：</label>
                     <input type='text' class="form-control" :value=file.titel :name='`list[${index}][titel]`' :id='`list[${index}][titel]`'>
                     <label class="form-check-label" style='color:#fff;'>フォルダ：{{file.fullLvName}}</label>
                     <button type='button' class='btn btn-outline-light ib' @click='foldersetOpen(index,file.fileNo,"mng")'><i class="bi bi-folder-plus h1"></i></button>
+                    <button type='button' class='btn btn-outline-light ib' @click='filetrash(file.fileNo,file.filename)'><i class="bi bi-trash3 h1"></i></button>
 
                     <!--未実装<label class="form-check-label" :for='`list[${index}][tags]`' style='color:#fff;'>タグ：</label>
                     <i class="bi bi-hash h1"></i>
@@ -104,6 +112,7 @@
                 //動画一覧関連↓
                 const files = ref()
                 var joken = {'lv':'<?php echo $lv;?>'}  //動画一覧の表示条件
+                var token = '<?php echo $token;?>'
                 const get_files = () => {//アップロード後の分類等未設定の動画一覧を取得
                     //console_log(joken.lv)
                     axios
@@ -112,6 +121,24 @@
                         files.value = [...response.data],
                         console_log('get_files succsess')
                         //console_log(files.value)
+                    })
+                    .catch((error) => console.log(error));
+                }
+                const filetrash = (no,name) =>{//動画削除
+                    if(confirm('本当に削除しますか？(復元はできません)') === false){
+                        return
+                    }
+                    axios
+                    .get(`ajax_del_file.php?F=${name}&FN=${no}&vp_csrf_token=${token}`)
+                    .then((response) => {
+                        console_log(response)
+                        if(response.data==="success"){
+                            get_files()
+                            console_log('filetrash succsess')
+                        }else{
+                            alert(response.data)
+                            console_log('filetrash 失敗')
+                        }
                     })
                     .catch((error) => console.log(error));
                 }
@@ -241,6 +268,7 @@
                 return {
                     files,
                     get_files,
+                    filetrash,
                     foldertreedisp,
                     folderAreaRole,
                     foldersetOpen,

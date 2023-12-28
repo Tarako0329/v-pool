@@ -72,15 +72,75 @@ function delete_old_token($token, $pdo) {
 function csrf_create(){
     //INPUT HIDDEN で呼ぶ
     $token = get_token();
-    $_SESSION['csrf_token'] = $token;
+    $_SESSION['vp_csrf_token'] = $token;
 
 	//自動ログインのトークンを１週間の有効期限でCookieにセット
     //setCookie("webrez_token", $token, time()+60*60*24*7, "/", null, TRUE, TRUE); // secure, httponly
-    setCookie("csrf_token", $token, time()+60*60*24*2, "/", "", false, TRUE);
+    //setCookie("vp_csrf_token", $token, time()+60*60*24*2, "/", "", false, TRUE);
+    setCookie("vp_csrf_token", $token, time()+60*60*24*2, "/", "",true,true);
     
     return $token;
 }
-
+// =========================================================
+// データ更新時のセキュリティ対応（セッション・クッキー・ポストのチェック）
+//　一元化 (リファイラ[xxx.php,xxx.php],[S:session,C:cookie,G:get,P:post])
+// =========================================================
+function csrf_checker($from,$chkpoint){
+    //リファイラーチェック
+    $chkflg=false;
+    foreach($from as $row){
+        if(false !== strpos($_SERVER['HTTP_REFERER'],ROOT_URL.$row)){
+            $chkflg=true;
+            log_writer("func:csrf_checker","HTTP_REFERER success \$_SERVER[".$_SERVER['HTTP_REFERER']."]");
+            log_writer("func:csrf_checker","HTTP_REFERER success ParamUrl[".ROOT_URL.$row."]");
+            break;
+        }
+    }
+    if($chkflg===true){
+        $i=0;
+        $csrf="";
+        $checked="";
+        foreach($chkpoint as $row){
+            if($row==="S"){
+                $csrf_ck = (!empty($_SESSION["vp_csrf_token"])?$_SESSION["vp_csrf_token"]:"\$_SESSION empty");
+                $checked=$checked."S";
+                unset($_SESSION['vp_csrf_token']) ; // セッション側のトークンを削除し再利用を防止
+            }else if($row==="C"){
+                $csrf_ck = (!empty($_COOKIE["vp_csrf_token"])?$_COOKIE["vp_csrf_token"]:"\$_COOKIE empty");
+                $checked=$checked."C";
+                setCookie("vp_csrf_token", '', -1, "/", "", TRUE, TRUE); // secure, httponly// クッキー側のトークンを削除し再利用を防止
+            }if($row==="G"){
+                $csrf_ck = (!empty($_GET["vp_csrf_token"])?$_GET["vp_csrf_token"]:"\$_GET empty");
+                $checked=$checked."G";
+            }if($row==="P"){
+                $csrf_ck = (!empty($_POST["vp_csrf_token"])?$_POST["vp_csrf_token"]:"\$_POST empty");
+                $checked=$checked."P";
+            }
+            if($i!==0){
+                if($csrf !== $csrf_ck){
+                    $chkflg=false;
+                    log_writer("func:csrf_checker","CSRF failed [".$checked."]");
+                    log_writer("func:csrf_checker","CSRF failed [".$csrf."]");
+                    log_writer("func:csrf_checker","CSRF failed [".$csrf_ck."]");
+                    $chkflg = "セッションが正しくありません";
+                    break;
+                }else{
+                    log_writer("func:csrf_checker","CSRF success [".$checked."]");
+                    log_writer("func:csrf_checker","CSRF success [".$csrf."]");
+                    log_writer("func:csrf_checker","CSRF success [".$csrf_ck."]");
+                }
+            }
+            $csrf=$csrf_ck;
+            $i++;
+        }
+    }else{
+        log_writer("func:csrf_checker","HTTP_REFERER failed \$_SERVER[".$_SERVER['HTTP_REFERER']."]");
+        log_writer("func:csrf_checker","HTTP_REFERER failed ParamUrl[".ROOT_URL.$row."]");
+        $chkflg = "アクセス元が不正です";
+    }
+    
+    return $chkflg;
+}
 // =========================================================
 // 不可逆暗号化
 // =========================================================
@@ -103,14 +163,10 @@ function passEx($str,$uid,$key){
 
 function rot13encrypt2 ($str) {
 	//暗号化
-    //return str_rot13(base64_encode($str)); 復号化するときに文字化けが発生したので変更
-    //return bin2hex(openssl_encrypt($str, 'AES-128-ECB', null));
     return bin2hex(openssl_encrypt($str, "AES-128-ECB", "1"));
 }
 function rot13decrypt2 ($str) {
 	//暗号化解除
-    //return base64_decode(str_rot13($str)); 復号化するときに文字化けが発生したので変更
-    //return openssl_decrypt(hex2bin($str), 'AES-128-ECB', null);
     return openssl_decrypt(hex2bin($str), "AES-128-ECB", "1");
 }
 
