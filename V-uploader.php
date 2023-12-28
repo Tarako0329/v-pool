@@ -287,7 +287,7 @@
                     setTimeout(setframeheight, 1000);//0.5s
                 })
                 watch(msg,()=>{
-                    console_log('watch msg => '+stats.value)
+                    console_log('watch msg => '+msg.value)
                     setTimeout(()=>{msg.value=""}, 3000);//1.5s
                     setTimeout(setframeheight, 1000);//0.5s
                 })

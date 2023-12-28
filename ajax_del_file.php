@@ -5,15 +5,15 @@ $return_satas="success";
 $rtn = csrf_checker(["V-manager-iframe.php"],["G","C"]);
 if($rtn !== true){
   $return_satas = "error:".$rtn;
+  /*
   header("HTTP/1.1 200 Ok");
   echo $return_satas;
   exit();
-}
+  */
+}else if(!empty($_GET)){
+  $token = csrf_create();
+  log_writer('\$_GET',$_GET);
 
-log_writer('\$_GET',$_GET);
-
-
-if(!empty($_GET)){
   $filename = $_GET["F"];
   $fileNO = $_GET["FN"];
   try{
@@ -44,8 +44,13 @@ if(!empty($_GET)){
   $return_satas = "error:パラメータ不正";
 }
 
+$msg = array(
+  "status" => $return_satas
+  ,"token" => $token
+);
 
-//jsonとして出力
-header("HTTP/1.1 200 Ok");
-echo $return_satas;
+
+header('Content-type: application/json');
+echo json_encode($msg, JSON_UNESCAPED_UNICODE);
+exit();
 ?>

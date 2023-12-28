@@ -10,7 +10,7 @@
     */
    //var_dump(getFileList("./upload/ryota/"));
    $lv = !empty($_GET["lv"])?$_GET["lv"]:"%";
-   $token = csrf_create()
+   $token = csrf_create();
 ?>
 <!DOCTYPE html>
 <html lang='ja' style='overflow-x: hidden;'>
@@ -25,13 +25,13 @@
     <div id='getlist'>
     <HEADER style='height: 35px;padding:0;'>
         <div id='folderopen' @click='foldersetOpen("","","disp")' role="button">フォルダ選択 <i class="bi bi-folder2-open h3 treei"></i></div>
+        <transition>
+            <div v-if="msg!==''" class="alert alert-warning" role="alert">
+                {{msg}}
+            </div>
+        </transition>
     </HEADER>
     <MAIN class='container' style='color:#fff;padding:35px 0 0 0;' >
-            <transition>
-                <div v-if="msg!==''" class="alert alert-warning" role="alert">
-                    {{msg}}
-                </div>
-            </transition>
 
         <hr>
         <div id='mibunrui'><!--動画一覧-->
@@ -106,13 +106,14 @@
     -->
 </div>
     <script>//vue.js
-        const { createApp, ref, onMounted, reactive,computed } = Vue;
+        const { createApp, ref, onMounted, reactive,computed,watch } = Vue;
         createApp({
             setup() {
                 //動画一覧関連↓
                 const files = ref()
                 var joken = {'lv':'<?php echo $lv;?>'}  //動画一覧の表示条件
                 var token = '<?php echo $token;?>'
+                const msg = ref('')
                 const get_files = () => {//アップロード後の分類等未設定の動画一覧を取得
                     //console_log(joken.lv)
                     axios
@@ -132,7 +133,9 @@
                     .get(`ajax_del_file.php?F=${name}&FN=${no}&vp_csrf_token=${token}`)
                     .then((response) => {
                         console_log(response)
-                        if(response.data==="success"){
+                        if(response.data.status==="success"){
+                            msg.value="ファイルを削除しました。"
+                            token = response.data.token
                             get_files()
                             console_log('filetrash succsess')
                         }else{
@@ -258,6 +261,11 @@
                     });
 
                 }
+                watch(msg,()=>{
+                    console_log('watch msg => '+msg.value)
+                    setTimeout(()=>{msg.value=""}, 3000);//1.5s
+                    //setTimeout(setframeheight, 1000);//0.5s
+                })
 
                 onMounted(() => {
                     get_files()
@@ -278,6 +286,7 @@
                     ins_tree,
                     choese_folder,
                     open_folder,
+                    msg,
                 };
             }
         }).mount('#getlist');
