@@ -15,7 +15,7 @@
     <link rel='stylesheet' href='css/style.css?<?php echo $time; ?>' >
 
     <!--Vue.js-->
-    <script src="https://unpkg.com/vue@next"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@3.4.4"></script>
     <script src="https://unpkg.com/vue-cookies@1.8.2/vue-cookies.js"></script>
     <!--ajaxライブラリ-->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.19.0/axios.min.js"></script>

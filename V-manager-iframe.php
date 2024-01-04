@@ -1,14 +1,5 @@
 <?php
     require "php_header.php";
-    /*
-	if(empty($_SESSION["uid"])){
-        $_SESSION["MSG"]="セッション切れです。再度ログインしてください。";
-        header("HTTP/1.1 301 Moved Permanently");
-        header("Location: login.php");
-        exit();
-    }
-    */
-   //var_dump(getFileList("./upload/ryota/"));
    $lv = !empty($_GET["lv"])?$_GET["lv"]:"%";
    $token = csrf_create();
 ?>
