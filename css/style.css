@@ -83,6 +83,8 @@ button{
   margin:5px 6px 5px 5px;
   color:#FFA400;
   border:none;
+  border-radius: 5px;
+  background-color:inherit;
 }
 #foldertree{
   position: fixed;
@@ -123,6 +125,7 @@ button{
 }
 .tree_input{
   width:100px;
+  height: 31px;
   display:inline;
   margin-left: 5px;;
 }

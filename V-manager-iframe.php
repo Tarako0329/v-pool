@@ -36,12 +36,19 @@
                         <label class="form-check-label" :for="index">一括更新対象</label>
                     </div>-->
                     <p style='color:#fff;margin-bottom: 4px;'>ファイル名：{{file.before_name}}</p>
-                    <p style='color:#fff;margin-bottom: 4px;'>保存日時：{{file.insdate}}</p>
-                    <label class="form-check-label" :for='`list[${index}][titel]`' style='color:#fff;'>タイトル：</label>
-                    <input type='text' class="form-control" :value=file.titel :name='`list[${index}][titel]`' :id='`list[${index}][titel]`'>
+                    <p style='color:#fff;margin-bottom: 0px;'>保存日時：{{file.insdate}}</p>
+
+                    <span class="form-check-label" style='color:#fff;'>title：{{file.title}}</span>
+                    <button type='button' class='ib' @click='title_change(`${index}title`)' style='margin:0;'><i class="bi bi-pencil-square"></i></button>
+
+                    <div v-if='`${index}title`===title_cg' style='display:flex;height:35px'>
+                        <!--<label class="form-check-label" :for='`list[${index}][titel]`' style='color:#fff;'>タイトル：{{file.titel}}</label>-->
+                        <input type='text' class="form-control form-control-sm tree_input" :id='`list[${index}][titel]`' maxlength='40'>
+                        <button type='button' class='ib' @click='title_write(index)' style='margin:0;'><i class="bi bi-arrow-return-left"></i></button>
+                    </div>
                     <p style='color:#fff;margin-bottom: 4px;'>フォルダ：{{file.fullLvName}}</p>
-                    <button type='button' class='btn btn-outline-light ib' @click='foldersetOpen(index,file.fileNo,"mng")' :id='`list[${index}][titel]FB`'><i class="bi bi-folder-plus h1"></i></button>
-                    <button type='button' class='btn btn-outline-light ib' @click='filetrash(file.fileNo,file.filename)'><i class="bi bi-trash3 h1"></i></button>
+                    <button type='button' class='ib' @click='foldersetOpen(index,file.fileNo,"mng")' :id='`list[${index}][titel]FB`'><i class="bi bi-folder-plus h1"></i></button>
+                    <button type='button' class='ib' @click='filetrash(file.fileNo,file.filename)'><i class="bi bi-trash3 h1"></i></button>
 
                     <!--未実装<label class="form-check-label" :for='`list[${index}][tags]`' style='color:#fff;'>タグ：</label>
                     <i class="bi bi-hash h1"></i>
@@ -58,7 +65,7 @@
                     <div v-show='folderAreaRole==="mng"'><!--フォルダ編集モード-->
                         <li v-if='index===0' :style='{"padding-left":list.padding}' class='treeil'>
                         <i class="bi bi-folder-plus h3 treei" style='color:#FFA400;'></i>
-                        <input class="form-control form-control-sm tree_input" type='text' placeholder="フォルダ名" v-model='list.newname'>
+                        <input class="form-control form-control-sm tree_input" type='text' placeholder="フォルダ名" v-model='list.newname' maxlength='30'>
                         <button type='button' class='btn btn-outline-light treeb' @click='ins_tree(index)'>作成</button>
                         </li>
                         <li :style='{"padding-left":list.padding}' class='treeil' :id='"li_"+list.level' @click='choese_folder(index)' role='button'>
@@ -69,7 +76,7 @@
                             </template>
                             <template v-if='list.newfolder==="display"' >
                             <i class="bi bi-folder-plus h3 treei" style='color:#FFA400;'></i>
-                            <input class="form-control form-control-sm tree_input" type='text' placeholder="フォルダ名" v-model='list.newname'>
+                            <input class="form-control form-control-sm tree_input" type='text' placeholder="フォルダ名" v-model='list.newname' maxlength='30'>
                             <button type='button' class='btn btn-outline-light treeb' @click='ins_tree(index)'>作成</button>
                             </template>
                         </li>
@@ -255,6 +262,36 @@
                     });
 
                 }
+
+                //title編集関連
+                const title_cg = ref('')
+                const title_change = (taishou) =>{
+                    title_cg.value = taishou
+                }
+                const title_write = (index) =>{
+                    console_log(`title_write`)
+                    let newtitle = document.getElementById(`list[${index}][titel]`).value
+                    console_log(`${newtitle}`)
+
+                    axios
+                        .get(`ajax_upd_filetitle.php?title=${newtitle}&fileNo=${files.value[index]['fileNo']}`)
+                        .then((response) => {
+                            console_log(response)
+                            if(response.data==="success"){
+                                files.value[index]["title"] = newtitle
+                                title_cg.value = ''
+                                console_log('ajax_upd_filetitle succsess')
+                            }else{
+                                alert(response.data)
+                                console_log('ajax_upd_filetitle 失敗')
+                            }
+                        })
+                        .catch((error,response) => {
+                            console_log(error)
+                            console_log(response)
+                        });
+                }
+
                 watch(msg,()=>{
                     console_log('watch msg => '+msg.value)
                     setTimeout(()=>{msg.value=""}, 3000);//1.5s
@@ -281,6 +318,9 @@
                     choese_folder,
                     open_folder,
                     msg,
+                    title_cg,
+                    title_change,
+                    title_write,
                 };
             }
         }).mount('#getlist');
