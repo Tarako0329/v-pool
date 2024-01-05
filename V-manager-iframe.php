@@ -42,7 +42,6 @@
                     <button type='button' class='ib' @click='title_change(`${index}title`)' style='margin:0;'><i class="bi bi-pencil-square"></i></button>
 
                     <div v-if='`${index}title`===title_cg' style='display:flex;height:35px'>
-                        <!--<label class="form-check-label" :for='`list[${index}][titel]`' style='color:#fff;'>タイトル：{{file.titel}}</label>-->
                         <input type='text' class="form-control form-control-sm tree_input" :id='`list[${index}][titel]`' maxlength='40'>
                         <button type='button' class='ib' @click='title_write(index)' style='margin:0;'><i class="bi bi-arrow-return-left"></i></button>
                     </div>
@@ -60,33 +59,43 @@
         </div><!--動画一覧-->
         <div v-show='foldertreedisp' id='foldertree'><!--フォルダツリー-->
             <div class='text-end' id='foldertree_close' role='button' @click='foldersetClose()'>✖</div>
-            <ul style='padding:0;'>
+            <div style='padding:0;'>
                 <template v-for='(list,index) in tree' :key='list.level'>
-                    <div v-show='folderAreaRole==="mng"'><!--フォルダ編集モード-->
-                        <li v-if='index===0' :style='{"padding-left":list.padding}' class='treeil'>
-                        <i class="bi bi-folder-plus h3 treei" style='color:#FFA400;'></i>
-                        <input class="form-control form-control-sm tree_input" type='text' placeholder="フォルダ名" v-model='list.newname' maxlength='30'>
-                        <button type='button' class='btn btn-outline-light treeb' @click='ins_tree(index)'>作成</button>
-                        </li>
-                        <li :style='{"padding-left":list.padding}' class='treeil' :id='"li_"+list.level' @click='choese_folder(index)' role='button'>
-                            <i class="bi bi-folder h3 treei" :id='"i_"+list.level'></i>{{list.name}}</li>
-                        <li v-if='index!==0' :style='{"padding-left":list.next_padding}' class='treeil'>
-                            <template v-if='list.newfolder==="none"' >
-                            <a href="#" style='color:#FFA400;' @click='foldernameset(index)'><i class="bi bi-folder-plus h3 treei"></i>新規作成</a>
-                            </template>
-                            <template v-if='list.newfolder==="display"' >
+                    <!--<div v-show='folderAreaRole==="mng"'>--><!--フォルダ編集モード-->
+                    <div>
+                        <div v-if='index===0' :style='{"padding-left":list.padding}' class='treeil'>
                             <i class="bi bi-folder-plus h3 treei" style='color:#FFA400;'></i>
                             <input class="form-control form-control-sm tree_input" type='text' placeholder="フォルダ名" v-model='list.newname' maxlength='30'>
                             <button type='button' class='btn btn-outline-light treeb' @click='ins_tree(index)'>作成</button>
+                        </div>
+
+                        <div v-show='list.kaisou<="1" || tree_tenkai_list.includes(list.upper)' :style='{"padding-left":list.padding}' class='treeil' :id='"li_"+list.level' @click='choese_folder(index)' role='button'>
+                            <i class="bi bi-folder h3 treei" :id='"i_"+list.level'></i>{{list.name}}:{{list.kaisou}}
+                        </div>
+
+                        <div v-show='(index!==0 ) && (tree_tenkai_list.includes(list.level))' :style='{"padding-left":list.next_padding}' class='treeil'>
+                            <template v-if='list.newfolder==="none"' >
+                                <a href="#" style='color:#FFA400;' @click='foldernameset(index)'><i class="bi bi-folder-plus h3 treei"></i>新規作成</a>
                             </template>
-                        </li>
+                            <template v-if='list.newfolder==="display"' >
+                                <i class="bi bi-folder-plus h3 treei" style='color:#FFA400;'></i>
+                                <input class="form-control form-control-sm tree_input" type='text' placeholder="フォルダ名" v-model='list.newname' maxlength='30'>
+                                <button type='button' class='btn btn-outline-light treeb' @click='ins_tree(index)'>作成</button>
+                            </template>
+                        </div>
+
                     </div>
-                    <div v-show='folderAreaRole==="disp"' style='color:#FFA400;'><!--フォルダ表示モード-->
-                        <li :style='{"padding-left":list.padding}' class='treeil' :id='"li_"+list.level' @click='open_folder(list.lv)' role='button'>
-                            <i class="bi bi-folder h3 treei" :id='"i_"+list.level'></i>{{list.name}}</li>
+
+                    <!--フォルダ表示モード-->
+                    <!--
+                    <div v-show='folderAreaRole==="disp"' style='color:#FFA400;'>
+                        <div :style='{"padding-left":list.padding}' class='treeil' :id='"li_"+list.level' @click='open_folder(list.lv)' role='button'>
+                            <i class="bi bi-folder h3 treei" :id='"i_"+list.level'></i>{{list.name}}
+                        </div>
                     </div>
+                    -->
                 </template>
-            </ul>
+            </div>
         </div><!--フォルダツリー-->
     </MAIN>
     <!--未実装
@@ -202,33 +211,57 @@
 
                     }else if(folderAreaRole.value==="disp"){
                         foldertreedisp.value = false
+                        if(before_choese_i!==undefined){
+                            before_choese_i.className = "bi bi-folder h3 treei"
+                            before_choese_li.className = "treeil"
+                        }
                     }else{
                         return
                     }
+                    tree_tenkai_list.value = []
                 }
 
                 var before_choese_i
                 var before_choese_li
+                const tree_tenkai_list = ref([])
                 const choese_folder = (index) =>{//フォルダを選択する
                     console_log(`choese [${tree.value[index]["level"]}:${tree.value[index]["name"]}]`)
+
                     if(before_choese_i!==undefined){
                         before_choese_i.className = "bi bi-folder h3 treei"
                         before_choese_li.className = "treeil"
                     }
                     before_choese_i = document.getElementById("i_"+tree.value[index]["level"])
                     before_choese_li = document.getElementById("li_"+tree.value[index]["level"])
-                    
                     document.getElementById("i_"+tree.value[index]["level"]).className = "bi bi-folder-check h3 treei"
                     document.getElementById("li_"+tree.value[index]["level"]).className = "treeil fw-bold tree_choese"
 
-                    files.value[Findex]["level"] = tree.value[index]["level"]
-                    files.value[Findex]["fullLvName"] = tree.value[index]["fullLvName"]
+                    if(folderAreaRole.value === 'mng'){
+
+                        files.value[Findex]["level"] = tree.value[index]["level"]
+                        files.value[Findex]["fullLvName"] = tree.value[index]["fullLvName"]
+
+                    }else if(folderAreaRole.value === 'disp'){
+                        open_folder(tree.value[index]["lv"])
+                    }
+
+                    
+                    if(tree_tenkai_list.value.indexOf(tree.value[index]["level"])>=0){
+                        let target = tree_tenkai_list.value[tree_tenkai_list.value.indexOf(tree.value[index]["level"])]
+                        target = target.substr(0,tree.value[index]["kaisou"])
+                        console_log(`あるよ！${target}`)
+                        tree_tenkai_list.value = tree_tenkai_list.value.filter(row => !(row.startsWith(target) ))
+                    }else{
+                        tree_tenkai_list.value.push(tree.value[index]["level"])
+                    }
+                    console_log(tree_tenkai_list.value)
                 }
+
                 const open_folder = (lv) =>{
                     joken = {'lv':`${lv}%`}
                     console_log(joken)
                     get_files()
-                    foldertreedisp.value=false
+                    //foldertreedisp.value=false
                 }
                 //フォルダツリー関連↑
 
@@ -313,6 +346,7 @@
                     foldersetOpen,
                     foldersetClose,
                     tree,
+                    tree_tenkai_list,
                     foldernameset,
                     ins_tree,
                     choese_folder,
