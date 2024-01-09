@@ -35,15 +35,14 @@
 			<div class='col-1'></div>
 		</div><!--送信ボタン-->
 	</HEADER>
-	<MAIN class='container' style='color:#fff;padding-top:130px;'>
+	<MAIN class='container' style='color:#fff;padding-top:130px;padding-bottom:10px;'>
 		<div style='width:100%;height:100%;' id='Vmanager' scrolling="no">
-      <iframe src="V-manager-iframe.php?lv=%" width="95%" height="100%" id='Vmanager-frame'></iframe>
+      <iframe src="V-manager-iframe.php?lv=%" width="100%" height="100%" id='Vmanager-frame'></iframe>
     </div>
 
 	</MAIN>
-	<FOOTER>
-		
-	</FOOTER>
+	<!--<FOOTER>
+	</FOOTER>-->
 	</div>
 	<script>
 		const { createApp, ref, onMounted, computed } = Vue;

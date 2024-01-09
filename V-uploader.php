@@ -27,7 +27,7 @@
     <MAIN class='container' style='color:#fff;padding-bottom:0;' id='getlist'>
         <div id='uploadarea'>
             <transition>
-            <div v-if="msg!==''" class="alert alert-warning" role="alert">
+            <div v-show="msg!==''" class="alert alert-warning" role="alert">
               {{msg}}
             </div>
             </transition>
@@ -42,7 +42,17 @@
                 </div>
                 <div class='col-1'></div>
             </div><!--動画選択-->
-            <div v-if='["fileset","stop"].includes(stats)' class='row'><!--送信ボタン-->
+            <div v-show='["fileset","stop"].includes(stats)' class='row'><!--送信ボタン-->
+                <div class='col-1'></div>
+                <div class='col-10'>
+                    <select class='form-select' placeholder='アップロードフォルダの指定' v-model='upfolder'>
+                        <template v-for='(list,index) in tree' :key='list.level'>
+                            <option :value='list.level'>{{list.fullLvName}}</option>
+                        </template>
+                    </select>
+                </div>
+                <div class='col-1'></div>
+
                 <div class='col-1'></div>
                 <div class='col-10'>
                     <button type='button' class='btn btn-primary btn-lg' style='width:50%' @click="uploading()">送 信</button>
@@ -50,7 +60,7 @@
                 </div>
                 <div class='col-1'></div>
             </div><!--送信ボタン-->
-            <div v-if='["sending","stop"].includes(stats)' class='row fadein'><!--再開・停止ボタン-->
+            <div v-show='["sending","stop"].includes(stats)' class='row fadein'><!--再開・停止ボタン-->
                 <div class='col-1'></div>
                 <div class='col-10'>
                     <button type='button' class='btn btn-warning btn-lg' style='width:50%' @click="cancel()">キャンセル</button>
@@ -59,14 +69,14 @@
                 </div>
                 <div class='col-1'></div>
             </div><!--再開・停止ボタン-->
-            <div v-if='["error"].includes(stats)' class='row fadein'><!--リトライ-->
+            <div v-show='["error"].includes(stats)' class='row fadein'><!--リトライ-->
                 <div class='col-1'></div>
                 <div class='col-10'>
                     <button type='button' class='btn btn-success btn-lg' style='width:50%' @click="retry()">リトライ</button>
                 </div>
                 <div class='col-1'></div>
             </div><!--リトライ-->
-            <div v-if='["sending","stop"].includes(stats)' class='row' style='margin-bottom:15px;'><!--progressbar-->
+            <div v-show='["sending","stop"].includes(stats)' class='row' style='margin-bottom:15px;'><!--progressbar-->
                 <div class='col-3 text-end'>{{result}}</div>
                     <div class='col-8' style='padding:2px 12px 2px 2px;'>
                         <div style='border:solid 1px #FFA400;height:100%;width:100%;'>
@@ -94,6 +104,20 @@
         const { createApp, ref, onMounted, reactive,computed,watch } = Vue;
         createApp({
             setup() {
+                const tree = ref()      //フォルダツリーのデータ配列
+                const upfolder = ref('0000000000')
+                const get_tree = () => {//フォルダツリーのデータを取得
+                    axios
+                    .get('ajax_get_tree.php')
+                    .then((response) => {
+                        tree.value = [...response.data]
+                        //console.log(tree.value)
+                        console_log('ajax_get_tree succsess')
+                        //console_log(files.value)
+                    })
+                    .catch((error) => console.log(error));
+                }
+
                 const stats = ref('none')//none:初期値,fileset,sending,stop,success,error,cancel
                 const filelist = ref([])//upload files
                 const msg = ref('') //alert msg
@@ -125,7 +149,7 @@
                 };
 
                 var flow = new Flow({
-                    target:'upload.php',
+                    target:`upload.php`,
                     forceChunkSize:true,
                     chunkSize:1*1028*1028*150, //チャンクサイズ（小分けにするサイズです）
                 });
@@ -152,10 +176,13 @@
                     filelist.value = []
                     let elem = document.getElementById(e.target.id)
                     flow.assignBrowse(elem,null,null,{'accept':'video/*'})
+                    
                     document.getElementById("progressbar").innerHTML = '0%'
                     document.getElementById("progressbar").style.width = '0%'
                     document.getElementById("progressbar").style.backgroundColor="#fff"
                     document.getElementById("progressbar").style.color="#FFA400"
+                    
+                    get_tree()
                 }
                 const uploading = () =>{//アップロード実行
                     console_log(flow.files.length)
@@ -256,6 +283,14 @@
                     if(errfilelist===""){
                         flow.cancel()
                         stats.value = 'success'
+                        upfolder.value='0000000000'
+                        axios
+                        .get(`ajax_session_folder_clear.php`)
+                        .then((response) => {
+                            console_log('ajax_session_folder_clear succsess')
+                        })
+                        .catch((error) => console.log(error));
+
                     }else{
                         stats.value = 'error'
                     }
@@ -291,6 +326,15 @@
                     setTimeout(()=>{msg.value=""}, 3000);//1.5s
                     setTimeout(setframeheight, 1000);//0.5s
                 })
+                watch(upfolder,()=>{
+                    console_log('watch upfolder => '+upfolder.value)
+                    axios
+                    .get(`ajax_session_folder_set.php?level=${upfolder.value}`)
+                    .then((response) => {
+                        console_log('ajax_session_folder_set succsess')
+                    })
+                    .catch((error) => console.log(error));
+                })
 
                 onMounted(() => {
                     setframeheight()
@@ -309,6 +353,8 @@
                     pause,
                     result,
                     msg,
+                    tree,
+                    upfolder,
                 };
             }
         }).mount('#getlist');

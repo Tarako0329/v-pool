@@ -15,19 +15,19 @@
 <BODY id = 'body' style='background:black;' >
     <div id='getlist'>
     <HEADER style='height: 35px;padding:0;'>
-        <div id='folderopen' @click='foldersetOpen("","","disp")' role="button">フォルダ選択 <i class="bi bi-folder2-open h3 treei"></i></div>
+        <div id='folderopen' @click='foldersetOpen("","","disp")' role="button">フォルダ選択・作成 <i class="bi bi-folder2-open h3 treei"></i></div>
         <transition>
             <div v-if="msg!==''" class="alert alert-warning" role="alert">
                 {{msg}}
             </div>
         </transition>
     </HEADER>
-    <MAIN class='container' style='color:#fff;padding:35px 0 0 0;' >
+    <MAIN class='container' style='color:#fff;padding:35px 0 80px 0;' >
         <hr>
         <div id='mibunrui'><!--動画一覧-->
             <div class='row'>
-            <template v-for='(file,index) in files' :key='file.fileNo'>
-                <div class ='col-4 col-lg-2' style='margin-bottom:20px;'>
+            <template v-for='(file,index) in fileview' :key='file.fileNo'>
+                <div class ='col-4 col-lg-2' style='margin-bottom:20px;' :id = '`top${index}`'>
 			        <video style='max-width:100%;width:100%;'preload='metadata' controls muted :src='`./upload/${file.uid}/${file.filename}#t=0.01`'></video>
 	    		</div>
                 <div class ='col-8 col-lg-4' style='margin-bottom:20px;' :id='`File_NO_${index}`'>
@@ -56,6 +56,7 @@
                 </div>
             </template>
             </div>
+            
         </div><!--動画一覧-->
         <div v-show='foldertreedisp' id='foldertree'><!--フォルダツリー-->
             <div class='text-end' id='foldertree_close' role='button' @click='foldersetClose()'>✖</div>
@@ -98,24 +99,23 @@
             </div>
         </div><!--フォルダツリー-->
     </MAIN>
-    <!--未実装
+    
     <FOOTER>
-        <div class='row'>
-            <div class='col-1'></div>
-            <div class='col-10'>
-                <button class='btn btn-primary btn-lg' style='width:100%' >更 新</button>
+        <div class='row' style='height:100%;padding:0;'>
+            <div class='col-4 text-center fbtn'><a class='a_none' href="#top0" @click='move_page(-6)'>＜＜</a></div>
+            <div class='col-4' style='border-left:solid 1px #FFA400;border-right:solid 1px #FFA400;margin:0;'>
             </div>
-            <div class='col-1'></div>
+            <div class='col-4 text-center fbtn'><a class='a_none' href="#top0" @click='move_page(6)'>＞＞</a></div>
         </div>
     </FOOTER>
-    -->
-</div>
+    
+    </div>
     <script>//vue.js
         const { createApp, ref, onMounted, reactive,computed,watch } = Vue;
         createApp({
             setup() {
                 //動画一覧関連↓
-                const files = ref()
+                const files = ref([])
                 var joken = {'lv':'<?php echo $lv;?>'}  //動画一覧の表示条件
                 var token = '<?php echo $token;?>'
                 const msg = ref('')
@@ -150,13 +150,35 @@
                     })
                     .catch((error) => console.log(error));
                 }
+
+                const iv = ref(0)
+                const fileview = computed(()=>{
+                    let newlist = files.value.slice(Number(iv.value),Number(iv.value) + 6)
+                    return newlist
+                })
+
+                
+                const move_page = (i) =>{
+                    console_log('viewer')
+                    if(iv.value + Number(i)<0){
+                        iv.value = 0
+                    }else{
+                        iv.value = iv.value + Number(i)
+                    }
+                    
+                    console_log(iv)
+                }
+                
+                // 監視を開始する
+                
+
                 //動画一覧関連↑
 
                 //フォルダツリー関連↓
                 const foldertreedisp = ref(false)   //フォルダエリアの表示非表示
                 const folderAreaRole = ref('')      //フォルダエリアの役割切換(mng:動画をフォルダに入れる or disp:フォルダ内の動画を表示)
                 const tree = ref()                  //フォルダツリーのデータ配列
-                const get_tree = () => {//アップロード後の分類等未設定の動画一覧を取得
+                const get_tree = () => {//フォルダツリーのデータを取得
                     axios
                     .get('ajax_get_tree.php')
                     .then((response) => {
@@ -339,6 +361,9 @@
                 
                 return {
                     files,
+                    fileview,
+                    move_page,
+                    iv,
                     get_files,
                     filetrash,
                     foldertreedisp,
@@ -355,6 +380,7 @@
                     title_cg,
                     title_change,
                     title_write,
+                    //next_load,
                 };
             }
         }).mount('#getlist');
@@ -363,12 +389,3 @@
 
 </BODY>
 </html>
-
-
-
-
-
-
-
-
-
