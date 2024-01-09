@@ -71,7 +71,7 @@
                         </div>
 
                         <div v-show='list.kaisou<="1" || tree_tenkai_list.includes(list.upper)' :style='{"padding-left":list.padding}' class='treeil' :id='"li_"+list.level' @click='choese_folder(index)' role='button'>
-                            <i class="bi bi-folder h3 treei" :id='"i_"+list.level'></i>{{list.name}}:{{list.kaisou}}
+                            <i class="bi bi-folder h3 treei" :id='"i_"+list.level'></i>{{list.name}}
                         </div>
 
                         <div v-show='(index!==0 ) && (tree_tenkai_list.includes(list.level))' :style='{"padding-left":list.next_padding}' class='treeil'>
