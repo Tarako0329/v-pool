@@ -22,7 +22,7 @@
             </div>
         </transition>
     </HEADER>
-    <MAIN class='container' style='color:#fff;padding:35px 0 80px 0;' >
+    <MAIN class='container' style='color:#fff;padding:35px 0 30px 0;' >
         <hr>
         <div id='mibunrui'><!--動画一覧-->
             <div class='row'>
@@ -86,29 +86,27 @@
                         </div>
 
                     </div>
-
-                    <!--フォルダ表示モード-->
-                    <!--
-                    <div v-show='folderAreaRole==="disp"' style='color:#FFA400;'>
-                        <div :style='{"padding-left":list.padding}' class='treeil' :id='"li_"+list.level' @click='open_folder(list.lv)' role='button'>
-                            <i class="bi bi-folder h3 treei" :id='"i_"+list.level'></i>{{list.name}}
-                        </div>
-                    </div>
-                    -->
                 </template>
             </div>
         </div><!--フォルダツリー-->
+        
+        <div class='row' style='height: 40px;padding:0;'>
+            <div class='col-4 text-center fbtn'><a class='a_none' href="#top0" @click='move_page(-6)'>＜＜</a></div>
+            <div class='col-4' style='border-left:solid 1px #FFA400;border-right:solid 1px #FFA400;margin:0;'>
+            </div>
+            <div class='col-4 text-center fbtn'><a class='a_none' href="#top0" @click='move_page(6)'>＞＞</a></div>
+        </div>
     </MAIN>
-    
+    <!--
     <FOOTER>
-        <div class='row' style='height:100%;padding:0;'>
+        <div class='row' style='height:0%;padding:0;'>
             <div class='col-4 text-center fbtn'><a class='a_none' href="#top0" @click='move_page(-6)'>＜＜</a></div>
             <div class='col-4' style='border-left:solid 1px #FFA400;border-right:solid 1px #FFA400;margin:0;'>
             </div>
             <div class='col-4 text-center fbtn'><a class='a_none' href="#top0" @click='move_page(6)'>＞＞</a></div>
         </div>
     </FOOTER>
-    
+    -->
     </div>
     <script>//vue.js
         const { createApp, ref, onMounted, reactive,computed,watch } = Vue;
@@ -162,6 +160,8 @@
                     console_log('viewer')
                     if(iv.value + Number(i)<0){
                         iv.value = 0
+                    }else if(iv.value + Number(i)>files.value.length){
+                        //iv.value = 0
                     }else{
                         iv.value = iv.value + Number(i)
                     }

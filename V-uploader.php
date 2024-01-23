@@ -85,9 +85,9 @@
                     </div>
                 <div class='col-1'></div>
             </div><!--progressbar-->
-            <div class='row fadein' style='border:solid 1px #FFA400;margin-bottom:15px;'><!--ここにファイルリスト表示-->
+            <div class='container fadein' id='filelist' style='border:solid 1px #FFA400;margin-bottom:15px;height: 0px;overflow: auto;'  scrolling="no"><!--ここにファイルリスト表示-->
                 <template v-for='(file,index) in filelist' :key='file.name'>
-                    <div class="col-1"></div><div class="col-8">{{file.name}}</div><div class="col-2" :id="index">{{file.persent}}</div><div class="col-1"></div>
+                    <div class='row'><div class="col-1"></div><div class="col-8">{{file.name}}</div><div class="col-2" :id="index">{{file.persent}}</div><div class="col-1"></div></div>
                 </template>
                 <!--{{filelist}}-->
             </div><!--ここにファイルリスト表示-->
@@ -218,6 +218,7 @@
                     flow.cancel();
                     document.getElementById("progressbar").innerHTML = '0%'
                     document.getElementById("progressbar").style.width = '0%'
+                    document.getElementById('filelist').style.height = '0px'
                     filelist.value = []
                     stats.value='cancel'
                 }
@@ -242,6 +243,7 @@
                         console_log("アップロード準備OK")
                     }
                     //setframeheight()
+                    document.getElementById('filelist').style.height = '150px'
                     stats.value='fileset'
                 });
                 flow.on('progress',function(){
@@ -290,13 +292,14 @@
                             console_log('ajax_session_folder_clear succsess')
                         })
                         .catch((error) => console.log(error));
-
+                        
+                        msg.value = "完了しました";
+                        setTimeout(()=>{document.getElementById('filelist').style.height = '0px'}, 3000);//3s
                     }else{
                         stats.value = 'error'
                     }
                     
                     index=0
-                    //document.getElementById('filelist').innerHTML = errfilelist
                     document.getElementById("Vmanager-frame").contentWindow.location.reload();
                     
                 })
@@ -323,7 +326,7 @@
                 })
                 watch(msg,()=>{
                     console_log('watch msg => '+msg.value)
-                    setTimeout(()=>{msg.value=""}, 3000);//1.5s
+                    setTimeout(()=>{msg.value=""}, 3000);//3s
                     setTimeout(setframeheight, 1000);//0.5s
                 })
                 watch(upfolder,()=>{
