@@ -2,7 +2,7 @@
 	require "php_header.php";
 	
 	if(empty($_SESSION["uid"])){
-		$_SESSION["MSG"]="セッション切れです。再度ログインしてください。";
+		$_SESSION["MSG"]=empty($_SESSION["MSG"])?"ログインIDとパスワードを入力し、新規登録をお願いします。":$_SESSION["MSG"];
 	  header("HTTP/1.1 301 Moved Permanently");
 	  header("Location: login.php");
 	  exit();

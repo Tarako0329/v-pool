@@ -38,6 +38,10 @@ $pdo_h = new PDO(DNS, USER_NAME, PASSWORD, get_pdo_options());
 define("SAVEDIR", $_ENV["SAVEDIR"]);
 define("NOM", $_ENV["SIO"]);
 
+if(!empty($_GET["v"])){
+  setCookie("vpool", $_GET["v"], time()+60*60*24*7, "/", "",true,true);
+}
+
 $token = !empty($_COOKIE["vpool"])?$_COOKIE["vpool"]:"";
 if(!empty($_SESSION["uid"])){
   //ログイン継続・期間延長
@@ -68,7 +72,7 @@ if(!empty($_SESSION["uid"])){
     $_SESSION["uid"] = $user[0]["uid"];
     $_SESSION["name"] = "hoge";
   }else{
-    //$_SESSION["MSG"]="ログイン有効期限切れ";
+    $_SESSION["MSG"]="ログイン有効期限切れです。再ログインしてください。";
     //リダイレクト
     //header("HTTP/1.1 301 Moved Permanently");
     //header("Location: login.php");

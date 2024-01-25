@@ -63,7 +63,7 @@ if(!empty($_POST)){
 if($success){
   //リダイレクト
   $token=get_token();
-  setCookie("vpool", $token, time()+60*60*24*7, "/", "",true,true);
+  //setCookie("vpool", $token, time()+60*60*24*7, "/", "",true,true);
   $sql = "insert into loginkeeper values(:id,:token,:kdatetime)";
   try{
     $pdo_h->beginTransaction();
@@ -74,7 +74,7 @@ if($success){
     $stmt->execute();
     $pdo_h->commit();
     header("HTTP/1.1 301 Moved Permanently");
-    header("Location: index.php");
+    header("Location: index.php?v=".$token);
     exit();
   }catch(Exception $e){
     $_SESSION["MSG"]="loginkeeper登録失敗。";
