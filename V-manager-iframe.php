@@ -15,7 +15,7 @@
 <BODY id = 'body' style='background:black;' >
     <div id='getlist'>
     <HEADER style='height: 35px;padding:0;'>
-        <div id='folderopen' @click='foldersetOpen("","","disp")' role="button">フォルダ選択・作成 <i class="bi bi-folder2-open h3 treei"></i></div>
+        <div id='folderopen' @click='foldersetOpen("","","disp")' role="button" data-bs-toggle='modal' data-bs-target='#folderediter'>フォルダ選択・作成 <i class="bi bi-folder2-open h3 treei"></i></div>
         <transition>
             <div v-if="msg!==''" class="alert alert-warning" role="alert">
                 {{msg}}
@@ -58,11 +58,12 @@
             </div>
             
         </div><!--動画一覧-->
-        <div v-show='foldertreedisp' id='foldertree'><!--フォルダツリー-->
+        <!--フォルダツリー-->
+        <!--
+        <div v-show='foldertreedisp' id='foldertree'>
             <div class='text-end' id='foldertree_close' role='button' @click='foldersetClose()'>✖</div>
             <div style='padding:0;'>
                 <template v-for='(list,index) in tree' :key='list.level'>
-                    <!--<div v-show='folderAreaRole==="mng"'>--><!--フォルダ編集モード-->
                     <div>
                         <div v-if='index===0' :style='{"padding-left":list.padding}' class='treeil'>
                             <i class="bi bi-folder-plus h3 treei" style='color:#FFA400;'></i>
@@ -88,7 +89,7 @@
                     </div>
                 </template>
             </div>
-        </div><!--フォルダツリー-->
+        </div>フォルダツリー-->
         
         <div class='row' style='height: 40px;padding:0;'>
             <div class='col-4 text-center fbtn'><a class='a_none' href="#top0" @click='move_page(-6)'>＜＜</a></div>
@@ -107,7 +108,45 @@
         </div>
     </FOOTER>
     -->
+	<div class='modal fade' id='folderediter' tabindex='-1' role='dialog' aria-labelledby='basicModal' aria-hidden='true'>
+		<div class='modal-dialog  modal-dialog-centered modal-dialog-scrollable'>
+			<div class='modal-content edit' style=''>
+				<div class='modal-header'>
+				</div>
+				<div class='modal-body'>
+                <template v-for='(list,index) in tree' :key='list.level'>
+                    <div>
+                        <div v-if='index===0' :style='{"padding-left":list.padding}' class='treeil'>
+                            <i class="bi bi-folder-plus h3 treei" style='color:#FFA400;'></i>
+                            <input class="form-control form-control-sm tree_input" type='text' placeholder="フォルダ名" v-model='list.newname' maxlength='30'>
+                            <button type='button' class='btn btn-outline-light treeb' @click='ins_tree(index)'>作成</button>
+                        </div>
+
+                        <div v-show='list.kaisou<="1" || tree_tenkai_list.includes(list.upper)' :style='{"padding-left":list.padding}' class='treeil' :id='"li_"+list.level' @click='choese_folder(index)' role='button'>
+                            <i class="bi bi-folder h3 treei" :id='"i_"+list.level'></i>{{list.name}}
+                        </div>
+
+                        <div v-show='(index!==0 ) && (tree_tenkai_list.includes(list.level))' :style='{"padding-left":list.next_padding}' class='treeil'>
+                            <template v-if='list.newfolder==="none"' >
+                                <a href="#" style='color:#FFA400;' @click='foldernameset(index)'><i class="bi bi-folder-plus h3 treei"></i>新規作成</a>
+                            </template>
+                            <template v-if='list.newfolder==="display"' >
+                                <i class="bi bi-folder-plus h3 treei" style='color:#FFA400;'></i>
+                                <input class="form-control form-control-sm tree_input" type='text' placeholder="フォルダ名" v-model='list.newname' maxlength='30'>
+                                <button type='button' class='btn btn-outline-light treeb' @click='ins_tree(index)'>作成</button>
+                            </template>
+                        </div>
+
+                    </div>
+                </template>
+				</div>
+				<div class='modal-footer'>
+				</div>
+			</div>
+		</div>
+	</div>
     </div>
+    
     <script>//vue.js
         const { createApp, ref, onMounted, reactive,computed,watch } = Vue;
         createApp({
@@ -192,7 +231,7 @@
                 var Findex,FfileNo  //編集対象
                 const foldersetOpen = (index,fileNo,role) =>{//フォルダ選択エリアを表示
                     console_log(role)
-                    foldertreedisp.value = true
+                    //foldertreedisp.value = true
                     if(role==='mng'){
                         Findex = index
                         FfileNo = fileNo
