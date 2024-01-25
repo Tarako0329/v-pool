@@ -2,7 +2,11 @@
   require "php_header.php";
   $return_satas = "success";
 
-  if(!empty($_GET)){
+  $rtn = csrf_checker(["V-manager-iframe.php"],["G","C"]);
+  if($rtn !== true){
+    $return_satas = "error:".$rtn;
+  }else if(!empty($_GET)){
+    $token = csrf_create();
     //log_writer('\$_GET',$_GET);
     {//同一フォルダのチェック
       if($_GET["lv"]==="0"){
@@ -77,9 +81,19 @@
       }
   
     }
+  }else{
+
   }
-  
-  header("HTTP/1.1 200 Ok");
-  echo $return_satas;
+  $msg = array(
+    "status" => $return_satas
+    ,"token" => $token
+  );
+
+
+  header('Content-type: application/json');
+  echo json_encode($msg, JSON_UNESCAPED_UNICODE);
+  exit();
+  //header("HTTP/1.1 200 Ok");
+  //echo $return_satas;
 
 ?>

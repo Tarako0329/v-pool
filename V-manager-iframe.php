@@ -46,7 +46,9 @@
                         <button type='button' class='ib' @click='title_write(index)' style='margin:0;'><i class="bi bi-arrow-return-left"></i></button>
                     </div>
                     <p style='color:#fff;margin-bottom: 4px;'>フォルダ：{{file.fullLvName}}</p>
-                    <button type='button' class='ib' @click='foldersetOpen(index,file.fileNo,"mng")' :id='`list[${index}][titel]FB`'><i class="bi bi-folder-plus h1"></i></button>
+                    <button type='button' class='ib' @click='foldersetOpen(index,file.fileNo,"mng")' :id='`list[${index}][titel]FB`' data-bs-toggle='modal' data-bs-target='#folderediter'>
+                        <i class="bi bi-folder-plus h1"></i>
+                    </button>
                     <button type='button' class='ib' @click='filetrash(file.fileNo,file.filename)'><i class="bi bi-trash3 h1"></i></button>
 
                     <!--未実装<label class="form-check-label" :for='`list[${index}][tags]`' style='color:#fff;'>タグ：</label>
@@ -141,6 +143,7 @@
                 </template>
 				</div>
 				<div class='modal-footer'>
+                    <button v-show='folderAreaRole==="mng"' class='btn btn-primary' type='button' @click='foldersetClose()' data-bs-dismiss="modal">決 定</button>
 				</div>
 			</div>
 		</div>
@@ -194,7 +197,6 @@
                     return newlist
                 })
 
-                
                 const move_page = (i) =>{
                     console_log('viewer')
                     if(iv.value + Number(i)<0){
@@ -207,10 +209,6 @@
                     
                     console_log(iv)
                 }
-                
-                // 監視を開始する
-                
-
                 //動画一覧関連↑
 
                 //フォルダツリー関連↓
@@ -246,15 +244,15 @@
                     console_log("foldersetClose")
                     if(folderAreaRole.value==="mng"){
                         axios
-                        .get(`ajax_upd_filefolder.php?lv=${files.value[Findex]['level']}&fileNo=${FfileNo}`)
+                        .get(`ajax_upd_filefolder.php?lv=${files.value[Findex]['level']}&fileNo=${FfileNo}&vp_csrf_token=${token}`)
                         .then((response) => {
                             console_log(response)
-                            if(response.data==="success"){
+                            if(response.data.status==="success"){
                                 if(before_choese_i!==undefined){
                                     before_choese_i.className = "bi bi-folder h3 treei"
                                     before_choese_li.className = "treeil"
                                 }
-
+                                token = response.data.token
                                 console_log('ajax_upd_filefolder succsess')
                             }else{
                                 alert(response.data)
@@ -339,10 +337,11 @@
                         return
                     }
                     axios
-                    .get(`ajax_ins_tree.php?lv=${uplevel}&name=${name}`)
+                    .get(`ajax_ins_tree.php?lv=${uplevel}&name=${name}&vp_csrf_token=${token}`)
                     .then((response) => {
                         console_log(response)
-                        if(response.data==="success"){
+                        if(response.data.status==="success"){
+                            token = response.data.token
                             get_tree()
                             console_log('ajax_ins_tree succsess')
                         }else{
@@ -368,22 +367,23 @@
                     console_log(`${newtitle}`)
 
                     axios
-                        .get(`ajax_upd_filetitle.php?title=${newtitle}&fileNo=${files.value[index]['fileNo']}`)
-                        .then((response) => {
-                            console_log(response)
-                            if(response.data==="success"){
-                                files.value[index]["title"] = newtitle
-                                title_cg.value = ''
-                                console_log('ajax_upd_filetitle succsess')
-                            }else{
-                                alert(response.data)
-                                console_log('ajax_upd_filetitle 失敗')
-                            }
-                        })
-                        .catch((error,response) => {
-                            console_log(error)
-                            console_log(response)
-                        });
+                    .get(`ajax_upd_filetitle.php?title=${newtitle}&fileNo=${files.value[index]['fileNo']}&vp_csrf_token=${token}`)
+                    .then((response) => {
+                        console_log(response)
+                        if(response.data.status==="success"){
+                            files.value[index]["title"] = newtitle
+                            title_cg.value = ''
+                            token = response.data.token
+                            console_log('ajax_upd_filetitle succsess')
+                        }else{
+                            alert(response.data)
+                            console_log('ajax_upd_filetitle 失敗')
+                        }
+                    })
+                    .catch((error,response) => {
+                        console_log(error)
+                        console_log(response)
+                    });
                 }
 
                 watch(msg,()=>{

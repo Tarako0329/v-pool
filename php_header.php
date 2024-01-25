@@ -9,7 +9,7 @@ $dotenv->load();
 define("MAIN_DOMAIN",$_ENV["MAIN_DOMAIN"]);
 define("ROOT_URL",$_ENV["HTTP"]);
 
-$rtn=session_set_cookie_params(24*60*60*24*3,'/',MAIN_DOMAIN,true,true);
+//$rtn=session_set_cookie_params(24*60*60*24*3,'/',MAIN_DOMAIN,true,true);
 session_start();
 //$_SESSION = [];
 
@@ -40,13 +40,17 @@ define("NOM", $_ENV["SIO"]);
 
 if(!empty($_GET["v"])){
   setCookie("vpool", $_GET["v"], time()+60*60*24*7, "/", "",true,true);
+  $token = $_GET["v"];
+}else{
+  $token = !empty($_COOKIE["vpool"])?$_COOKIE["vpool"]:"";
 }
 
-$token = !empty($_COOKIE["vpool"])?$_COOKIE["vpool"]:"";
+
 if(!empty($_SESSION["uid"])){
   //ログイン継続・期間延長
   
   setCookie("vpool", $token, time()+60*60*24*7, "/", "", TRUE, TRUE);//1week
+  log_writer("login延長",time()+60*60*24*7);
   try{
     $pdo_h->beginTransaction();
     $sql = "update loginkeeper set keepdatetime =:kdatetime where uid =:id and token =:token)";
@@ -62,6 +66,7 @@ if(!empty($_SESSION["uid"])){
   }
 }else{
   //トークンからuidを取得
+  log_writer("トークンからuidを取得",$_SESSION);
   $sql = "select * from loginkeeper where token =:token and keepdatetime >=:kdatetime";
   $stmt = $pdo_h->prepare($sql);
   $stmt->bindValue("token", $token, PDO::PARAM_STR);
