@@ -2,12 +2,12 @@
 	require "php_header.php";
 	
 	if(empty($_SESSION["uid"])){
-		$_SESSION["MSG"]=empty($_SESSION["MSG"])?"ログインIDとパスワードを入力し、新規登録をお願いします。":$_SESSION["MSG"];
+		//$_SESSION["MSG"]=empty($_SESSION["MSG"])?"ログインIDとパスワードを入力し、新規登録をお願いします。":$_SESSION["MSG"];
 	  header("HTTP/1.1 301 Moved Permanently");
 	  header("Location: login.php");
 	  exit();
 	}
-
+	setCookie("vpool_usage", "on", time()+60*60*24*1825, "/", "",true,true);
 ?>
 <!DOCTYPE html>
 <html lang='ja'>

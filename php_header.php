@@ -20,7 +20,7 @@ if(MAIN_DOMAIN==="localhost:81"){
   $id="demo";
   $pass="00000000";
 }else{
-  $time=date('Ymd')."up03";
+  $time=date('Y')."up03";
   $id="";
   $pass="";
 }
@@ -45,44 +45,40 @@ if(!empty($_GET["v"])){
   $token = !empty($_COOKIE["vpool"])?$_COOKIE["vpool"]:"";
 }
 
+if($_SESSION["MSG"] <> "ログオフしました"){
+  if(!empty($_SESSION["uid"])){
+    //ログイン継続・期間延長
 
-if(!empty($_SESSION["uid"])){
-  //ログイン継続・期間延長
-  
-  setCookie("vpool", $token, time()+60*60*24*7, "/", "", TRUE, TRUE);//1week
-  log_writer("login延長",time()+60*60*24*7);
-  try{
-    $pdo_h->beginTransaction();
-    $sql = "update loginkeeper set keepdatetime =:kdatetime where uid =:id and token =:token)";
-    $stmt = $pdo_h->prepare($sql);
-    $stmt->bindValue("id", $_SESSION["uid"], PDO::PARAM_STR);
-    $stmt->bindValue("token", $_COOKIE["vpool"], PDO::PARAM_STR);
-    $stmt->bindValue("kdatetime", strtotime("+7 day"), PDO::PARAM_STR);
-    $stmt->execute();
-    $pdo_h->commit();
-  }catch(Exception $e){
-    $_SESSION["MSG"]="loginkeeper延長登録失敗。";
-    $pdo_h->rollBack();
-  }
-}else{
-  //トークンからuidを取得
-  log_writer("トークンからuidを取得",$_SESSION);
-  $sql = "select * from loginkeeper where token =:token and keepdatetime >=:kdatetime";
-  $stmt = $pdo_h->prepare($sql);
-  $stmt->bindValue("token", $token, PDO::PARAM_STR);
-  $stmt->bindValue("kdatetime", date("Y-m-d"), PDO::PARAM_STR);
-  $stmt->execute();
-  $user = $stmt->fetchAll();
-  if(!empty($user[0]["uid"])){
-    $_SESSION["uid"] = $user[0]["uid"];
-    $_SESSION["name"] = "hoge";
+    setCookie("vpool", $token, time()+60*60*24*7, "/", "", TRUE, TRUE);//1week
+    log_writer("login延長",time()+60*60*24*7);
+    try{
+      $pdo_h->beginTransaction();
+      $sql = "update loginkeeper set keepdatetime =:kdatetime where uid =:id and token =:token)";
+      $stmt = $pdo_h->prepare($sql);
+      $stmt->bindValue("id", $_SESSION["uid"], PDO::PARAM_STR);
+      $stmt->bindValue("token", $_COOKIE["vpool"], PDO::PARAM_STR);
+      $stmt->bindValue("kdatetime", strtotime("+7 day"), PDO::PARAM_STR);
+      $stmt->execute();
+      $pdo_h->commit();
+    }catch(Exception $e){
+      $_SESSION["MSG"]="loginkeeper延長登録失敗。";
+      $pdo_h->rollBack();
+    }
   }else{
-    $_SESSION["MSG"]="ログイン有効期限切れです。再ログインしてください。";
-    //リダイレクト
-    //header("HTTP/1.1 301 Moved Permanently");
-    //header("Location: login.php");
-    //exit();
+    //トークンからuidを取得
+    log_writer("トークンからuidを取得",$_SESSION);
+    $sql = "select * from loginkeeper where token =:token and keepdatetime >=:kdatetime";
+    $stmt = $pdo_h->prepare($sql);
+    $stmt->bindValue("token", $token, PDO::PARAM_STR);
+    $stmt->bindValue("kdatetime", date("Y-m-d"), PDO::PARAM_STR);
+    $stmt->execute();
+    $user = $stmt->fetchAll();
+    if(!empty($user[0]["uid"])){
+      $_SESSION["uid"] = $user[0]["uid"];
+      $_SESSION["name"] = "hoge";
+    }else{
+      $_SESSION["MSG"]="ログイン有効期限切れです。再ログインしてください。";
+    }
   }
 }
-
 ?>

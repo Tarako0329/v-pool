@@ -1,5 +1,8 @@
 <?php
-    require "php_header.php";
+  require "php_header.php";
+  if($_COOKIE["vpool_usage"] <> "on"){
+    $_SESSION["MSG"]="ログインIDとパスワードを入力し、新規登録をお願いします。";
+  }
 ?>
 <!DOCTYPE html>
 <html lang='ja'>
