@@ -60,39 +60,6 @@
             </div>
             
         </div><!--動画一覧-->
-        <!--フォルダツリー-->
-        <!--
-        <div v-show='foldertreedisp' id='foldertree'>
-            <div class='text-end' id='foldertree_close' role='button' @click='foldersetClose()'>✖</div>
-            <div style='padding:0;'>
-                <template v-for='(list,index) in tree' :key='list.level'>
-                    <div>
-                        <div v-if='index===0' :style='{"padding-left":list.padding}' class='treeil'>
-                            <i class="bi bi-folder-plus h3 treei" style='color:#FFA400;'></i>
-                            <input class="form-control form-control-sm tree_input" type='text' placeholder="フォルダ名" v-model='list.newname' maxlength='30'>
-                            <button type='button' class='btn btn-outline-light treeb' @click='ins_tree(index)'>作成</button>
-                        </div>
-
-                        <div v-show='list.kaisou<="1" || tree_tenkai_list.includes(list.upper)' :style='{"padding-left":list.padding}' class='treeil' :id='"li_"+list.level' @click='choese_folder(index)' role='button'>
-                            <i class="bi bi-folder h3 treei" :id='"i_"+list.level'></i>{{list.name}}
-                        </div>
-
-                        <div v-show='(index!==0 ) && (tree_tenkai_list.includes(list.level))' :style='{"padding-left":list.next_padding}' class='treeil'>
-                            <template v-if='list.newfolder==="none"' >
-                                <a href="#" style='color:#FFA400;' @click='foldernameset(index)'><i class="bi bi-folder-plus h3 treei"></i>新規作成</a>
-                            </template>
-                            <template v-if='list.newfolder==="display"' >
-                                <i class="bi bi-folder-plus h3 treei" style='color:#FFA400;'></i>
-                                <input class="form-control form-control-sm tree_input" type='text' placeholder="フォルダ名" v-model='list.newname' maxlength='30'>
-                                <button type='button' class='btn btn-outline-light treeb' @click='ins_tree(index)'>作成</button>
-                            </template>
-                        </div>
-
-                    </div>
-                </template>
-            </div>
-        </div>フォルダツリー-->
-        
         <div class='row' style='height: 40px;padding:0;'>
             <div class='col-4 text-center fbtn'><a class='a_none' href="#top0" @click='move_page(-6)'>＜＜</a></div>
             <div class='col-4' style='border-left:solid 1px #FFA400;border-right:solid 1px #FFA400;margin:0;'>
@@ -100,16 +67,7 @@
             <div class='col-4 text-center fbtn'><a class='a_none' href="#top0" @click='move_page(6)'>＞＞</a></div>
         </div>
     </MAIN>
-    <!--
-    <FOOTER>
-        <div class='row' style='height:0%;padding:0;'>
-            <div class='col-4 text-center fbtn'><a class='a_none' href="#top0" @click='move_page(-6)'>＜＜</a></div>
-            <div class='col-4' style='border-left:solid 1px #FFA400;border-right:solid 1px #FFA400;margin:0;'>
-            </div>
-            <div class='col-4 text-center fbtn'><a class='a_none' href="#top0" @click='move_page(6)'>＞＞</a></div>
-        </div>
-    </FOOTER>
-    -->
+
 	<div class='modal fade' id='folderediter' tabindex='-1' role='dialog' aria-labelledby='basicModal' aria-hidden='true'>
 		<div class='modal-dialog  modal-dialog-centered modal-dialog-scrollable'>
 			<div class='modal-content edit' style=''>

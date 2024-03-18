@@ -11,12 +11,50 @@ const console_log=(log)=>{
   }
 }
 
-const deleteAllFormData = (formData) => {
-  const keys = [];
-  for (const key of formData.keys()) {
-      keys.push(key);
-  }
-  for (const idx in keys) {
-      formData.delete(keys[idx]);
-  }
+
+const GET_TREE = ()=>{//フォルダツリー取得
+	return new Promise((resolve, reject) => {
+		GET_TREE_SHORI(resolve);
+	});
 }
+const GET_TREE_SHORI = (resolve) =>{
+  let obj
+  axios
+  .get(`ajax_get_tree.php`)
+  .then((response) => {
+    obj = response.data
+    console_log('ajax_get_tree succsess')
+  })
+  .catch((error)=>{
+    console_log('ajax_get_tree.php ERROR')
+    console_log(error)
+  })
+  .finally(()=>{
+    resolve(obj)
+  })
+}
+
+
+/*サンプル
+const GET_USER2 = ()=>{//サイト設定情報取得
+	return new Promise((resolve, reject) => {
+		GET_USER_SHORI(resolve);
+	});
+}
+const GET_USER_SHORI = (resolve) =>{
+  let obj
+  axios
+  .get(`ajax_get_usersMSonline.php`)
+  .then((response) => {
+    obj = response.data
+    console_log('ajax_get_usersMSonline succsess')
+  })
+  .catch((error)=>{
+    console_log('ajax_get_usersMSonline.php ERROR')
+    console_log(error)
+  })
+  .finally(()=>{
+    resolve(obj)
+  })
+}
+*/

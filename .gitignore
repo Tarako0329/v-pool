@@ -12,3 +12,5 @@ xxx*
 *.MOV
 *.mp4
 .htaccess
+*copy*
+*template*
