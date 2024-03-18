@@ -19,7 +19,7 @@
 	?>
 	<script src="./script/flow.js"></script>
 	<script src="./script/vue3.js"></script>
-	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+	
 	<TITLE>Video Uploader</TITLE>
 </head>
 <BODY id = 'body' style='background:black;' >
