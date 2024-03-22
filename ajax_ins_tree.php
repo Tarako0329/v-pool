@@ -2,7 +2,7 @@
   require "php_header.php";
   $return_satas = "success";
 
-  $rtn = csrf_checker(["V-manager-iframe.php"],["G","C"]);
+  $rtn = csrf_checker(["","index.php"],["G","C"]);
   if($rtn !== true){
     $return_satas = "error:".$rtn;
   }else if(!empty($_GET)){
